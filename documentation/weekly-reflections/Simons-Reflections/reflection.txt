@@ -1,0 +1,9 @@
+# Simon's Weekly Reflection
+
+First week was pritty slow, we just set up the project and started to plan the app.
+we picked a proejct based on what we know we can complete either way.
+
+lets hope the group holds together.
+
+personaly i set up the porject and the git repo along with the github thing that lets us use github
+to track whats done and not.
