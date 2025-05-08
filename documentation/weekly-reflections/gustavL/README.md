@@ -1,0 +1,3 @@
+I wasn't around for the first meeting. There was some missunderstanding, but everything worked out and I am now up to speed.
+
+The first week we talked about what kind of project we wanted to create. We decided to create an e-commerce website. I have a little experience with that so I suggested some ideas. The plan for me is to find some nice looking wordpress designs that we will look at on monday next week. I also created this weekly reflection folder, but that is for everyone. Right now we are in the planing phase but we want to get started as soon as possible. We are still trying to figure out the project workflow.
