@@ -4,7 +4,7 @@ import User, { IUser } from "../models/user";
 const userRouter = express.Router();
 
 // GET all users
-userRouter.get("/allusers", async (req: Request, res: Response) => {
+userRouter.get("/", async (req: Request, res: Response) => {
   try {
     const users = await User.find();
     res.status(200).json(users);
@@ -17,8 +17,27 @@ userRouter.get("/allusers", async (req: Request, res: Response) => {
   }
 });
 
+// POST a new user
+userRouter.post("/", async (req: Request, res: Response) => {
+  const user = new User({
+    username: req.body.username,
+    email: req.body.email,
+  });
+
+  try {
+    const newUser = await user.save();
+    res.status(201).json(newUser);
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      res.status(500).json({ message: error.message });
+    } else {
+      res.status(500).json({ message: "An unknown error occurred" });
+    }
+  }
+});
+
 // GET a user by ID
-userRouter.get("/user/:id", async (req: Request, res: Response) => {
+userRouter.get("/:id", async (req: Request, res: Response) => {
   try {
     const user = await User.findById(req.params.id);
     if (!user) {
@@ -37,7 +56,7 @@ userRouter.get("/user/:id", async (req: Request, res: Response) => {
 });
 
 // GET a user by username
-userRouter.get("/user/:username", async (req: Request, res: Response) => {
+userRouter.get("/username/:username", async (req: Request, res: Response) => {
   try {
     const user = await User.findOne({ username: req.params.username });
     if (user) {
@@ -55,27 +74,8 @@ userRouter.get("/user/:username", async (req: Request, res: Response) => {
   }
 });
 
-// POST a new user
-userRouter.post("/adduser", async (req: Request, res: Response) => {
-  const user = new User({
-    username: req.body.username,
-    email: req.body.email,
-  });
-
-  try {
-    const newUser = await user.save();
-    res.status(201).json(newUser);
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      res.status(500).json({ message: error.message });
-    } else {
-      res.status(500).json({ message: "An unknown error occurred" });
-    }
-  }
-});
-
 // PUT - Update user by ID
-userRouter.put("/updateuser/:id", async (req: Request, res: Response) => {
+userRouter.put("/:id", async (req: Request, res: Response): Promise<any> => {
   try {
     const { username, email } = req.body;
 
@@ -106,7 +106,7 @@ userRouter.put("/updateuser/:id", async (req: Request, res: Response) => {
 });
 
 // DELETE - Remove a user by ID
-userRouter.delete("/deleteuser/:id", async (req: Request, res: Response) => {
+userRouter.delete("/:id", async (req: Request, res: Response) => {
   try {
     await User.findByIdAndDelete(req.params.id);
     res.status(200).json({ message: "User deleted" });
