@@ -4,6 +4,7 @@ import mongoose, { Document, Schema, Model } from "mongoose";
 export interface IItem extends Document {
   name: string;
   description: string;
+  category: string;
   image: string; // Image URL or file path
   price: number;
   userId: mongoose.Schema.Types.ObjectId; // Reference to User model
@@ -17,6 +18,10 @@ const ItemSchema: Schema<IItem> = new Schema({
     required: true,
   },
   description: {
+    type: String,
+    required: true,
+  },
+  category: {
     type: String,
     required: true,
   },
