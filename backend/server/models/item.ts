@@ -1,48 +1,59 @@
-import mongoose, { Document, Schema, Model } from "mongoose";
+import mongoose, { Document, Schema, Model, InsertOneModel } from "mongoose";
 
 // Define the Item schema and model
-export interface IItem extends Document {
+export interface ItemDocument extends Document {
   name: string;
   description: string;
   category: string;
-  image: string; // Image URL or file path
+  imageUrl: string; // Image URL or file path
   price: number;
   userId: mongoose.Schema.Types.ObjectId; // Reference to User model
   createdAt: Date;
+  updatedAt: Date;
 }
 
 // Create the schema for the Item model
-const ItemSchema: Schema<IItem> = new Schema({
-  name: {
-    type: String,
-    required: true,
-  },
-  description: {
-    type: String,
-    required: true,
-  },
-  category: {
-    type: String,
-    required: true,
-  },
-  image: {
-    type: String, // Image URL or file path
-    required: true,
-  },
-  price: {
-    type: Number,
-    required: true,
-  },
-  userId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User", // Reference to link to User model
-    required: true,
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now,
-  },
-});
+const ItemSchema: Schema<ItemDocument> = new Schema(
+  {
+    name: {
+      type: String,
+      required: true,
+      trim: true,
+      minlength: 1,
+      maxlength: 100,
+    },
+    description: {
+      type: String,
+      required: true,
+      trim: true,
+      maxlength: 500,
+    },
+    category: {
+      type: String,
+      required: true,
+      trim: true,
+      maxlength: 50,
+    },
+    imageUrl: {
+      type: String, // Image URL or file path
+      required: true,
+      trim: true,
+    },
+    price: {
+      type: Number,
+      required: true,
+      min: 0, // Price should be a positive number
+    },
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User", // Reference to link to User model
+      required: true,
+    },
+  }, 
+  {
+    timestamps: true, // Automatically add createdAt and updatedAt fields
+  }
+);
 
-const Item: Model<IItem> = mongoose.model<IItem>("Item", ItemSchema);
+const Item: Model<ItemDocument> = mongoose.model<ItemDocument>("Item", ItemSchema);
 export default Item;
