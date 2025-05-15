@@ -2,7 +2,7 @@ import mongoose, { Document, Schema, Model, InsertOneModel } from "mongoose";
 
 // Define the Item schema and model
 export interface ItemDocument extends Document {
-  name: string;
+  itemName: string;
   description: string;
   category: string;
   imageUrl: string; // Image URL or file path
@@ -15,7 +15,7 @@ export interface ItemDocument extends Document {
 // Create the schema for the Item model
 const ItemSchema: Schema<ItemDocument> = new Schema(
   {
-    name: {
+    itemName: {
       type: String,
       required: true,
       trim: true,
