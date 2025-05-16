@@ -1,0 +1,486 @@
+{
+  "users": [
+    {
+      "username": "vintage_lover",
+      "email": "vintage@example.com"
+    },
+    {
+      "username": "stamp_collector",
+      "email": "stamps@example.com"
+    },
+    {
+      "username": "postcard_enthusiast",
+      "email": "postcards@example.com"
+    },
+    {
+      "username": "coin_hunter",
+      "email": "coins@example.com"
+    },
+    {
+      "username": "antique_dealer",
+      "email": "antiques@example.com"
+    },
+    {
+      "username": "history_buff",
+      "email": "history@example.com"
+    },
+    {
+      "username": "ephemera_fan",
+      "email": "ephemera@example.com"
+    },
+    {
+      "username": "curiosity_seeker",
+      "email": "curiosities@example.com"
+    }
+  ],
+  "items": [
+    {
+      "name": "Vintage Postcard Collection",
+      "description": "Set of 10 vintage postcards from the 1950s",
+      "image": "https://example.com/postcard.jpg",
+      "price": 45.99,
+      "userId": "user1"
+    },
+    {
+      "name": "Antique Coin Set",
+      "description": "Collection of rare coins from the 19th century",
+      "image": "https://example.com/coins.jpg",
+      "price": 120.50,
+      "userId": "user1"
+    },
+    {
+      "name": "Vintage Stamp Album",
+      "description": "Album containing stamps from around the world",
+      "image": "https://example.com/stamps.jpg",
+      "price": 85.00,
+      "userId": "user1"
+    },
+    {
+      "name": "Antique Brass Compass",
+      "description": "19th century navigation compass in working condition",
+      "image": "https://example.com/compass.jpg",
+      "price": 65.75,
+      "userId": "user1"
+    },
+    {
+      "name": "Vintage Fountain Pen",
+      "description": "1940s Parker fountain pen with original box",
+      "image": "https://example.com/pen.jpg",
+      "price": 55.25,
+      "userId": "user1"
+    },
+    {
+      "name": "Antique Pocket Watch",
+      "description": "Gold-plated pocket watch from the early 1900s",
+      "image": "https://example.com/watch.jpg",
+      "price": 175.00,
+      "userId": "user1"
+    },
+    {
+      "name": "Vintage Camera",
+      "description": "1960s Kodak camera in working condition",
+      "image": "https://example.com/camera.jpg",
+      "price": 95.50,
+      "userId": "user1"
+    },
+    {
+      "name": "Antique Typewriter",
+      "description": "1920s Underwood typewriter in excellent condition",
+      "image": "https://example.com/typewriter.jpg",
+      "price": 225.00,
+      "userId": "user1"
+    },
+    {
+      "name": "Rare Stamp Collection",
+      "description": "Set of rare stamps from the Victorian era",
+      "image": "https://example.com/rare-stamps.jpg",
+      "price": 150.00,
+      "userId": "user2"
+    },
+    {
+      "name": "Vintage Comic Book",
+      "description": "1960s comic book in mint condition",
+      "image": "https://example.com/comic.jpg",
+      "price": 85.99,
+      "userId": "user2"
+    },
+    {
+      "name": "Antique Jewelry Box",
+      "description": "Hand-carved wooden jewelry box from the 1800s",
+      "image": "https://example.com/jewelry-box.jpg",
+      "price": 120.25,
+      "userId": "user2"
+    },
+    {
+      "name": "Vintage Record Collection",
+      "description": "Set of vinyl records from the 1950s-60s",
+      "image": "https://example.com/records.jpg",
+      "price": 95.00,
+      "userId": "user2"
+    },
+    {
+      "name": "Antique Oil Lamp",
+      "description": "Victorian-era oil lamp with original glass shade",
+      "image": "https://example.com/lamp.jpg",
+      "price": 75.50,
+      "userId": "user2"
+    },
+    {
+      "name": "Vintage Board Game",
+      "description": "1940s board game with all original pieces",
+      "image": "https://example.com/game.jpg",
+      "price": 45.25,
+      "userId": "user2"
+    },
+    {
+      "name": "Antique Door Knobs",
+      "description": "Set of brass door knobs from the Victorian era",
+      "image": "https://example.com/doorknobs.jpg",
+      "price": 65.00,
+      "userId": "user2"
+    },
+    {
+      "name": "Vintage Toy Train",
+      "description": "1950s toy train set in original box",
+      "image": "https://example.com/train.jpg",
+      "price": 110.75,
+      "userId": "user2"
+    },
+    {
+      "name": "Classic Postcard Set",
+      "description": "Collection of postcards from famous landmarks",
+      "image": "https://example.com/landmark-postcards.jpg",
+      "price": 35.99,
+      "userId": "user3"
+    },
+    {
+      "name": "Vintage Perfume Bottle",
+      "description": "Art deco perfume bottle from the 1930s",
+      "image": "https://example.com/perfume.jpg",
+      "price": 85.50,
+      "userId": "user3"
+    },
+    {
+      "name": "Antique Hand Mirror",
+      "description": "Silver-plated hand mirror with intricate design",
+      "image": "https://example.com/mirror.jpg",
+      "price": 65.25,
+      "userId": "user3"
+    },
+    {
+      "name": "Vintage Leather Suitcase",
+      "description": "1940s leather suitcase with original hardware",
+      "image": "https://example.com/suitcase.jpg",
+      "price": 125.00,
+      "userId": "user3"
+    },
+    {
+      "name": "Antique Pocket Knife",
+      "description": "19th century folding knife with bone handle",
+      "image": "https://example.com/knife.jpg",
+      "price": 45.75,
+      "userId": "user3"
+    },
+    {
+      "name": "Vintage Telephone",
+      "description": "1950s rotary telephone in working condition",
+      "image": "https://example.com/telephone.jpg",
+      "price": 95.50,
+      "userId": "user3"
+    },
+    {
+      "name": "Antique Inkwell",
+      "description": "Crystal inkwell with brass fittings from the 1890s",
+      "image": "https://example.com/inkwell.jpg",
+      "price": 75.25,
+      "userId": "user3"
+    },
+    {
+      "name": "Vintage Fishing Lures",
+      "description": "Collection of wooden fishing lures from the 1930s-40s",
+      "image": "https://example.com/lures.jpg",
+      "price": 55.00,
+      "userId": "user3"
+    },
+    {
+      "name": "Ancient Coin Collection",
+      "description": "Set of authenticated ancient Roman coins",
+      "image": "https://example.com/ancient-coins.jpg",
+      "price": 350.00,
+      "userId": "user4"
+    },
+    {
+      "name": "Vintage Microscope",
+      "description": "Brass microscope from the early 1900s",
+      "image": "https://example.com/microscope.jpg",
+      "price": 175.50,
+      "userId": "user4"
+    },
+    {
+      "name": "Antique Pocket Watch Chain",
+      "description": "Gold-filled watch chain with fob from the 1880s",
+      "image": "https://example.com/watch-chain.jpg",
+      "price": 95.25,
+      "userId": "user4"
+    },
+    {
+      "name": "Vintage Binoculars",
+      "description": "1940s military binoculars with leather case",
+      "image": "https://example.com/binoculars.jpg",
+      "price": 85.00,
+      "userId": "user4"
+    },
+    {
+      "name": "Antique Compass",
+      "description": "Maritime compass in brass case from the 1910s",
+      "image": "https://example.com/maritime-compass.jpg",
+      "price": 125.75,
+      "userId": "user4"
+    },
+    {
+      "name": "Vintage Cufflinks",
+      "description": "Art deco cufflinks with mother of pearl inlay",
+      "image": "https://example.com/cufflinks.jpg",
+      "price": 45.50,
+      "userId": "user4"
+    },
+    {
+      "name": "Antique Magnifying Glass",
+      "description": "Victorian magnifying glass with ivory handle",
+      "image": "https://example.com/magnifier.jpg",
+      "price": 65.25,
+      "userId": "user4"
+    },
+    {
+      "name": "Vintage Slide Rule",
+      "description": "Engineering slide rule from the 1950s with case",
+      "image": "https://example.com/slide-rule.jpg",
+      "price": 55.00,
+      "userId": "user4"
+    },
+    {
+      "name": "Victorian Photo Album",
+      "description": "Leather-bound photo album with brass clasps",
+      "image": "https://example.com/photo-album.jpg",
+      "price": 145.00,
+      "userId": "user5"
+    },
+    {
+      "name": "Vintage Desk Set",
+      "description": "1920s desk set with pen holder and letter opener",
+      "image": "https://example.com/desk-set.jpg",
+      "price": 95.50,
+      "userId": "user5"
+    },
+    {
+      "name": "Antique Brass Bell",
+      "description": "Ship's bell from the early 1900s",
+      "image": "https://example.com/bell.jpg",
+      "price": 75.25,
+      "userId": "user5"
+    },
+    {
+      "name": "Vintage Cigarette Case",
+      "description": "Silver art deco cigarette case from the 1930s",
+      "image": "https://example.com/cigarette-case.jpg",
+      "price": 65.00,
+      "userId": "user5"
+    },
+    {
+      "name": "Antique Skeleton Keys",
+      "description": "Collection of 15 skeleton keys from the 19th century",
+      "image": "https://example.com/keys.jpg",
+      "price": 55.75,
+      "userId": "user5"
+    },
+    {
+      "name": "Vintage Spectacles",
+      "description": "Wire-rimmed spectacles with original case from the 1920s",
+      "image": "https://example.com/spectacles.jpg",
+      "price": 85.50,
+      "userId": "user5"
+    },
+    {
+      "name": "Antique Snuff Box",
+      "description": "Silver snuff box with engraved design from the 1880s",
+      "image": "https://example.com/snuff-box.jpg",
+      "price": 125.25,
+      "userId": "user5"
+    },
+    {
+      "name": "Vintage Pill Box",
+      "description": "Porcelain pill box with hand-painted design",
+      "image": "https://example.com/pill-box.jpg",
+      "price": 45.00,
+      "userId": "user5"
+    },
+    {
+      "name": "Civil War Letters",
+      "description": "Collection of authentic Civil War correspondence",
+      "image": "https://example.com/civil-war-letters.jpg",
+      "price": 250.00,
+      "userId": "user6"
+    },
+    {
+      "name": "Vintage World Map",
+      "description": "Framed world map from the 1940s",
+      "image": "https://example.com/world-map.jpg",
+      "price": 125.50,
+      "userId": "user6"
+    },
+    {
+      "name": "Antique School Bell",
+      "description": "Cast iron school bell from the early 1900s",
+      "image": "https://example.com/school-bell.jpg",
+      "price": 85.25,
+      "userId": "user6"
+    },
+    {
+      "name": "Vintage Stereoscope",
+      "description": "Victorian stereoscope with collection of cards",
+      "image": "https://example.com/stereoscope.jpg",
+      "price": 95.00,
+      "userId": "user6"
+    },
+    {
+      "name": "Antique Apothecary Bottles",
+      "description": "Set of 5 glass apothecary bottles with original labels",
+      "image": "https://example.com/apothecary.jpg",
+      "price": 75.75,
+      "userId": "user6"
+    },
+    {
+      "name": "Vintage Tin Signs",
+      "description": "Collection of advertising tin signs from the 1950s",
+      "image": "https://example.com/tin-signs.jpg",
+      "price": 65.50,
+      "userId": "user6"
+    },
+    {
+      "name": "Antique Quill Set",
+      "description": "Writing quill set with inkwell from the 1890s",
+      "image": "https://example.com/quill.jpg",
+      "price": 55.25,
+      "userId": "user6"
+    },
+    {
+      "name": "Vintage Milk Bottles",
+      "description": "Set of glass milk bottles with original dairy logos",
+      "image": "https://example.com/milk-bottles.jpg",
+      "price": 45.00,
+      "userId": "user6"
+    },
+    {
+      "name": "Vintage Luggage Labels",
+      "description": "Collection of hotel and steamship luggage labels",
+      "image": "https://example.com/luggage-labels.jpg",
+      "price": 65.00,
+      "userId": "user7"
+    },
+    {
+      "name": "Antique Calling Cards",
+      "description": "Victorian calling cards with silver case",
+      "image": "https://example.com/calling-cards.jpg",
+      "price": 85.50,
+      "userId": "user7"
+    },
+    {
+      "name": "Vintage Seed Packets",
+      "description": "Collection of unused seed packets with lithographed illustrations",
+      "image": "https://example.com/seed-packets.jpg",
+      "price": 55.25,
+      "userId": "user7"
+    },
+    {
+      "name": "Antique Theatre Programs",
+      "description": "Programs from Broadway shows of the 1920s-30s",
+      "image": "https://example.com/theatre-programs.jpg",
+      "price": 75.00,
+      "userId": "user7"
+    },
+    {
+      "name": "Vintage Valentines",
+      "description": "Collection of Victorian valentine cards",
+      "image": "https://example.com/valentines.jpg",
+      "price": 95.75,
+      "userId": "user7"
+    },
+    {
+      "name": "Antique Trade Cards",
+      "description": "Set of 19th century advertising trade cards",
+      "image": "https://example.com/trade-cards.jpg",
+      "price": 45.50,
+      "userId": "user7"
+    },
+    {
+      "name": "Vintage Apothecary Labels",
+      "description": "Collection of unused pharmacy labels from the 1890s",
+      "image": "https://example.com/pharmacy-labels.jpg",
+      "price": 55.25,
+      "userId": "user7"
+    },
+    {
+      "name": "Antique Paper Dolls",
+      "description": "Set of Victorian paper dolls with wardrobes",
+      "image": "https://example.com/paper-dolls.jpg",
+      "price": 65.00,
+      "userId": "user7"
+    },
+    {
+      "name": "Vintage Scientific Instruments",
+      "description": "Collection of brass scientific instruments",
+      "image": "https://example.com/scientific.jpg",
+      "price": 225.00,
+      "userId": "user8"
+    },
+    {
+      "name": "Antique Kaleidoscope",
+      "description": "Victorian brass kaleidoscope with stand",
+      "image": "https://example.com/kaleidoscope.jpg",
+      "price": 175.50,
+      "userId": "user8"
+    },
+    {
+      "name": "Vintage Medical Tools",
+      "description": "Set of early 20th century medical instruments",
+      "image": "https://example.com/medical-tools.jpg",
+      "price": 195.25,
+      "userId": "user8"
+    },
+    {
+      "name": "Antique Celestial Globe",
+      "description": "Small desktop celestial globe from the 1920s",
+      "image": "https://example.com/celestial-globe.jpg",
+      "price": 145.00,
+      "userId": "user8"
+    },
+    {
+      "name": "Vintage Surveying Equipment",
+      "description": "Brass surveying tools with original wooden box",
+      "image": "https://example.com/surveying.jpg",
+      "price": 235.75,
+      "userId": "user8"
+    },
+    {
+      "name": "Antique Telescope",
+      "description": "Brass telescope with tripod from the early 1900s",
+      "image": "https://example.com/telescope.jpg",
+      "price": 275.50,
+      "userId": "user8"
+    },
+    {
+      "name": "Vintage Laboratory Glassware",
+      "description": "Collection of antique chemistry glassware",
+      "image": "https://example.com/lab-glass.jpg",
+      "price": 125.25,
+      "userId": "user8"
+    },
+    {
+      "name": "Antique Barometer",
+      "description": "Victorian wall barometer with thermometer",
+      "image": "https://example.com/barometer.jpg",
+      "price": 185.00,
+      "userId": "user8"
+    }
+  ]
+}

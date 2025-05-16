@@ -5,10 +5,10 @@ import userRouter from "./routes/users";
 import itemRouter from "./routes/items";
 
 const app = express();
-const PORT = 3000;
+const PORT = 5000;
 
 // Middleware
-app.use(cors({ origin: "http://localhost:3000" })); // Allow requests from the React frontend
+app.use(cors({ origin: "http://localhost:5173" })); // Allow requests from the React frontend (Vite default port)
 app.use(express.json());
 
 // MongoDB connection

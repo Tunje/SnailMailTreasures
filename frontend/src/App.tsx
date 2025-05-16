@@ -1,34 +1,43 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState, useEffect } from 'react'
+import './scss/index.scss'
+import PlaceholderNavbar from './components/PlaceholderNavbar'
+import PlaceholderFooter from './components/PlaceholderFooter'
+import PlaceholderHomePage from './components/PlaceholderHomePage'
+import UserPage from './components/UserPage'
+import ConsolePage from './components/ConsolePage'
+import seedService from './services/seedService'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [currentPage, setCurrentPage] = useState<'home' | 'user' | 'items' | 'console'>('home')
+  
+  // Initialize database with seed data if needed
+  useEffect(() => {
+    seedService.initialize()
+      .then(() => console.log('Database initialization complete'))
+      .catch(error => console.error('Failed to initialize database:', error))
+  }, [])
+
+  // Handle navigation between pages
+  const handleNavigation = (page: 'home' | 'user' | 'items' | 'console') => {
+    setCurrentPage(page)
+  }
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <div className="app">
+      <PlaceholderNavbar onNavigate={handleNavigation} />
+      <main className="main-content">
+        {currentPage === 'home' && <PlaceholderHomePage />}
+        {currentPage === 'user' && <UserPage />}
+        {currentPage === 'items' && (
+          <div className="container" style={{ padding: '2rem', textAlign: 'center' }}>
+            <h2>Items Page</h2>
+            <p>This is a placeholder for the Items page. It will display all available items.</p>
+          </div>
+        )}
+        {currentPage === 'console' && <ConsolePage />}
+      </main>
+      <PlaceholderFooter />
+    </div>
   )
 }
 
