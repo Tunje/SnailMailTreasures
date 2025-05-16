@@ -1,4 +1,4 @@
-import mongoose, { Document, Schema, Model } from "mongoose";
+import mongoose, { Document, Schema, Model } from 'mongoose';
 
 // Define the User schema and model
 export interface IUser extends Document {

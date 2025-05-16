@@ -21,12 +21,12 @@
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^5.1.0",
-    "mongoose": "^8.14.1"
+    "mongoose": "^8.14.3"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.1",
-    "@types/mongoose": "^5.11.96",
+    "@types/mongoose": "^5.11.97",
     "@types/node": "^22.15.14",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.3"
