@@ -6,6 +6,7 @@ export interface UserDocument extends Document {
   userName: string;
   email: string;
   password: string;
+  _id: mongoose.Schema.Types.ObjectId
   comparePassword: (password: string) => Promise<boolean>;
 }
 
