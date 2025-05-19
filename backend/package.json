@@ -29,7 +29,7 @@
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",
-    "@types/express": "^5.0.1",
+    "@types/express": "^5.0.2",
     "@types/mongoose": "^5.11.96",
     "@types/node": "^22.15.14",
     "@types/swagger-jsdoc": "^6.0.4",
