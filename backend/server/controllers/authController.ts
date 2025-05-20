@@ -38,6 +38,8 @@ export const loginUser = async (req: Request, res: Response): Promise<any> => {
 
     // Find user by email
     const user = await User.findOne({ email });
+
+    // Check if user exists and password is correct
     if (!user || !(await user.comparePassword(password))) {
       return res.status(401).json({ message: "Invalid email or password" });
     }
