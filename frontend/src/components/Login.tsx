@@ -1,26 +1,36 @@
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 const Login = () => {
   const navigate = useNavigate();
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [username, setUsername] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [user, setUser] = useState<any>(null);
+
+  const fetchUser = async () => {
+    try {
+      const response = await axios.get(`http://localhost:3000/api/user`);
+      setUser(response.data);
+      console.log("User data:", response.data);
+    } catch (err) {
+      console.error("Error fetching user data:", err);
+    }
+  };
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
+    fetchUser();
     if (!username || !password) {
       alert("Please fill in all fields");
       return;
-    } else if (username !== localStorage.getItem("username")) {
+    } else if (username !== user?.username) {
       alert("Username not found");
       return;
-    } else if (password !== localStorage.getItem("password")) {
+    } else if (password !== user?.password) {
       alert("Incorrect password");
       return;
-    } else if (
-      username === localStorage.getItem("username") &&
-      password === localStorage.getItem("password")
-    ) {
+    } else if (username === user.username && password === user.password) {
       alert("Login successful");
     }
     navigate("/home");
@@ -33,7 +43,7 @@ const Login = () => {
           <h1 className="text-3xl font-bold mb-6 text-center text-[#cd8e2e]">
             Login
           </h1>
-          <form className="space-y-5">
+          <form className="space-y-5" onSubmit={handleLogin}>
             <div>
               <label className="block text-[#cd8e2e] font-semibold mb-1">
                 Username:
@@ -61,7 +71,6 @@ const Login = () => {
               />
             </div>
             <button
-              onClick={handleLogin}
               type="submit"
               className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition-colors duration-200 shadow"
             >
