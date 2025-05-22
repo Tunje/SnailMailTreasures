@@ -2,14 +2,35 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Custom utility classes */
 .clip-banner {
   clip-path: polygon(0 0, 100% 0, 100% 70%, 50% 100%, 0 70%);
 }
 
-@theme {
-  --color-1: #674c27;
-  --color-2: #d49b67;
-  --color-3: #cd8e2e;
-  --color-4: #eedec1;
-  --color-5: #a6ae81;
+/* Custom theme colors that can be used with Tailwind */
+:root {
+  --color-primary: #cb8427;
+  --color-secondary: #7a7c56;
+  --color-accent: #d49b67;
+  --color-background: #fdf4df;
+  --color-text: #674c27;
+}
+
+/* Add custom Tailwind styles */
+@layer components {
+  .btn-primary {
+    @apply bg-[#7A7C56] hover:bg-[#5D5E42] text-white font-bold py-2 px-6 rounded-lg transition duration-300;
+  }
+
+  .btn-secondary {
+    @apply bg-transparent border-2 border-[#CB8427] text-[#CB8427] hover:bg-[#CB8427] hover:text-white font-bold py-2 px-6 rounded-lg transition duration-300;
+  }
+
+  .card {
+    @apply bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition duration-300;
+  }
+
+  .section-title {
+    @apply text-3xl font-bold text-[#CB8427] mb-6 text-center;
+  }
 }

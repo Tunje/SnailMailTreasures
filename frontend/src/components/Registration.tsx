@@ -15,7 +15,7 @@ const Registration = () => {
 
   const createUser = async () => {
     try {
-      await axios.post(`http://localhost:3000/api/user`, newUser);
+      await axios.post(`http://localhost:3000/api/user/register`, newUser);
       alert("User registered successfully");
     } catch (err) {
       console.error("Error fetching user data:", err);
