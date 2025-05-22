@@ -1,8 +1,8 @@
 import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
-import userRouter from "./routes/users";
-import itemRouter from "./routes/items";
+import userRouter from "./routes/userRoutes";
+import itemRouter from "./routes/itemRoutes";
 
 const app = express();
 const PORT = 3000;
