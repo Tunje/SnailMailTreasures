@@ -25,8 +25,8 @@ const PlaceholderHomePage: React.FC = () => {
     fetchFeaturedItems();
   }, []);
   return (
-    <div className="pt-32 w-full max-w-7xl mx-auto px-4">
-      <section className="py-16 bg-[var(--color-background)] rounded-lg mb-12 text-center">
+    <div className="pt-24 w-full max-w-7xl mx-auto px-4">
+      <section className="py-6 bg-[var(--color-background)] rounded-lg mb-12 text-center">
         <div className="max-w-3xl mx-auto px-6">
           <h1 className="text-4xl md:text-5xl font-bold text-[var(--color-primary)] mb-4">Welcome to SnailMail Treasures</h1>
           <p className="text-xl text-gray-700 mb-8">Discover unique collectibles and treasures from around the world</p>
@@ -50,9 +50,15 @@ const PlaceholderHomePage: React.FC = () => {
             featuredItems.map((item) => (
               <div className="card" key={item._id}>
                 <div 
-                  className="h-48 bg-cover bg-center" 
+                  className="h-48 bg-cover bg-center relative" 
                   style={{ backgroundImage: `url(${item.image})` }}
-                ></div>
+                >
+                  {!item.image && (
+                    <div className="absolute inset-0 flex items-center justify-center bg-gray-700">
+                      <div className="text-white text-4xl">📷</div>
+                    </div>
+                  )}
+                </div>
                 <div className="p-6">
                   <h3 className="text-xl font-semibold mb-2 text-[var(--color-primary)]">{item.name}</h3>
                   <p className="text-gray-600 mb-4">{item.description.length > 100 ? `${item.description.substring(0, 100)}...` : item.description}</p>

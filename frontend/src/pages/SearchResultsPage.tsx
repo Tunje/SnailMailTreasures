@@ -60,11 +60,19 @@ export default function SearchResultsPage({ query }: { query: string }) {
               key={item._id}
               className="bg-white rounded-lg shadow-md p-4 cursor-pointer hover:shadow-lg transition"
             >
-              <img
-                src={item.image}
-                alt={item.name}
-                className="w-full h-48 object-cover rounded-md mb-2"
-              />
+              <div className="relative w-full h-48 mb-2 rounded-md overflow-hidden">
+                {item.image ? (
+                  <img
+                    src={item.image}
+                    alt={item.name}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className="absolute inset-0 flex items-center justify-center bg-gray-700">
+                    <div className="text-white text-4xl">📷</div>
+                  </div>
+                )}
+              </div>
               <h2 className="text-xl font-semibold">{item.name}</h2>
               <p className="text-gray-600 truncate">{item.description}</p>
               <p className="text-[#CB8427] font-bold mt-1">

@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { User, getUserByUsername } from '../services/userService';
 import { Item, getItemsByUserId } from '../services/itemService';
 
 const UserPage: React.FC = () => {
+  const navigate = useNavigate();
   const [user, setUser] = useState<User | null>(null);
   const [userItems, setUserItems] = useState<Item[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -57,12 +59,12 @@ const UserPage: React.FC = () => {
   }, []);
   
   if (loading) {
-    return <div className="pt-32 w-full max-w-7xl mx-auto px-4 text-center py-12 text-gray-500">Loading user data...</div>;
+    return <div className="pt-24 w-full max-w-7xl mx-auto px-4 text-center py-6 text-gray-500">Loading user data...</div>;
   }
   
   if (error) {
     return (
-      <div className="pt-32 w-full max-w-7xl mx-auto px-4 text-center py-12">
+      <div className="pt-24 w-full max-w-7xl mx-auto px-4 text-center py-6">
         <p className="text-red-500 mb-2">Error: {error}</p>
         <p className="text-gray-500">Please make sure MongoDB is running and the backend server is started.</p>
       </div>
@@ -70,12 +72,12 @@ const UserPage: React.FC = () => {
   }
   
   if (!user) {
-    return <div className="pt-32 w-full max-w-7xl mx-auto px-4 text-center py-12 text-gray-500">User not found. Please log in.</div>;
+    return <div className="pt-24 w-full max-w-7xl mx-auto px-4 text-center py-6 text-gray-500">User not found. Please log in.</div>;
   }
   
   return (
-    <div className="pt-32 w-full max-w-7xl mx-auto px-4">
-      <section className="bg-[var(--color-background)] rounded-lg p-8 mb-8">
+    <div className="pt-24 w-full max-w-7xl mx-auto px-4">
+      <section className="bg-[var(--color-background)] rounded-lg p-4 mb-8">
         <h1 className="section-title">User Profile</h1>
         <div className="flex flex-col md:flex-row items-center md:items-start gap-8 p-4">
           <div className="w-24 h-24 rounded-full bg-[var(--color-primary)] text-white flex items-center justify-center text-4xl font-bold">
@@ -99,9 +101,15 @@ const UserPage: React.FC = () => {
             {userItems.map(item => (
               <div key={item._id} className="card">
                 <div 
-                  className="h-48 bg-cover bg-center" 
+                  className="h-48 bg-cover bg-center relative" 
                   style={{ backgroundImage: `url(${item.image})` }}
-                ></div>
+                >
+                  {!item.image && (
+                    <div className="absolute inset-0 flex items-center justify-center bg-gray-700">
+                      <div className="text-white text-4xl">📷</div>
+                    </div>
+                  )}
+                </div>
                 <div className="p-4">
                   <h3 className="text-xl font-semibold mb-2 text-[var(--color-primary)]">{item.name}</h3>
                   <p className="text-gray-600 mb-3 text-sm">{item.description}</p>
@@ -116,7 +124,12 @@ const UserPage: React.FC = () => {
           </div>
         )}
         <div className="mt-8 text-center">
-          <button className="btn-primary">+ Add New Item</button>
+          <button 
+            className="btn-primary"
+            onClick={() => navigate('/add-item')}
+          >
+            + Add New Item
+          </button>
         </div>
       </section>
     </div>

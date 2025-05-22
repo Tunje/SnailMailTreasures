@@ -7,6 +7,7 @@ import Login from './components/Login'
 import Registration from './components/Registration'
 import SearchResultsPage from './pages/SearchResultsPage'
 import UserPage from './components/UserPage'
+import AddItemPage from './pages/AddItemPage'
 import seedService from './services/seedService'
 
 function App() {
@@ -33,6 +34,7 @@ function App() {
             <Route path="/favorites" element={<PlaceholderHomePage />} />
             <Route path="/cart" element={<PlaceholderHomePage />} />
             <Route path="/user" element={<UserPage />} />
+            <Route path="/add-item" element={<AddItemPage />} />
           </Routes>
         </main>
       </div>
