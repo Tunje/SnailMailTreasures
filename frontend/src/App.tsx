@@ -19,8 +19,8 @@ function App() {
   return (
     <Router>
       <Navbar />
-      <div className="app">
-        <main className="main-content">
+      <div className="flex flex-col min-h-screen w-full max-w-7xl mx-auto">
+        <main className="flex-1 py-8 px-4">
           <Routes>
             <Route path="/" element={<Navigate to="/home" />} />
             <Route path="/home" element={<PlaceholderHomePage />} />
