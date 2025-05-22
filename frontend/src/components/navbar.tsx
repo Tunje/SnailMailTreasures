@@ -10,7 +10,11 @@ type Item = {
   price: number;
 };
 
-export default function Navbar() {
+interface NavbarProps {
+  onSearch: (query: string) => void;
+}
+
+export default function Navbar({ onSearch }: NavbarProps) {
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState<Item[]>([]);
   const [showResults, setShowResults] = useState(false);
@@ -124,21 +128,21 @@ export default function Navbar() {
 </nav>
             <button
               className={`px-4 py-1 rounded-lg text-sm transition ${
-                activeNav === 'search'
-                  ? 'bg-blue-400 text-white scale-105'
-                  : 'bg-[#7A7C56] text-white hover:scale-105 active:scale-95'
               }`}
-              onClick={() => {
-                setActiveNav('search');
-                setShowResults(true);
-                setSearchTerm(searchTerm);
-                navigate('/search');
-                setSearchResults([]);
-                setLoading(true);
-                setTimeout(() => {
-                  setLoading(false);
-                }, 1000);
-              }}
+            onClick={() => {
+              setActiveNav('search');
+              navigate('/search');
+              onSearch(searchTerm);
+              setSearchResults([]);
+              setLoading(true);
+              setTimeout(() => {
+                setLoading(false);
+              }, 1000);
+            }}
+          >
+            SEARCH
+          </button>
+        </div>
             >
               SEARCH
             </button>

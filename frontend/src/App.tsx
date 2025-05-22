@@ -1,7 +1,11 @@
 import { useEffect } from 'react'
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import "./index.css";
 import Navbar from "./components/navbar";
 import PlaceholderHomePage from './components/PlaceholderHomePage'
+import Login from './components/Login'
+import Registration from './components/Registration'
+import SearchResultsPage from './pages/SearchResultsPage'
 import seedService from './services/seedService'
 
 function App() {
@@ -13,18 +17,24 @@ function App() {
   }, [])
 
   return (
-    <>
+    <Router>
       <Navbar />
       <div className="app">
         <main className="main-content">
-          <PlaceholderHomePage />
-          <div className="bg-blue-500 text-white p-4 rounded">Tailwind Works!</div>
-          <div className="bg-green-500 text-white p-4 text-2xl rounded">
-            ✅ Tailwind is working now!
-          </div>
+          <Routes>
+            <Route path="/" element={<Navigate to="/home" />} />
+            <Route path="/home" element={<PlaceholderHomePage />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Registration />} />
+            <Route path="/search" element={<SearchResultsPage query={''} />} />
+            <Route path="/shop" element={<PlaceholderHomePage />} />
+            <Route path="/deals" element={<PlaceholderHomePage />} />
+            <Route path="/favorites" element={<PlaceholderHomePage />} />
+            <Route path="/cart" element={<PlaceholderHomePage />} />
+          </Routes>
         </main>
       </div>
-    </>
+    </Router>
   );
 }
 export default App;
