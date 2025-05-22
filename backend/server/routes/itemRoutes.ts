@@ -1,5 +1,5 @@
 import express, { Request, Response } from "express";
-import Item, { IItem } from "../models/item";
+import Item, { ItemDocument } from "../models/itemModel";
 
 const itemRouter = express.Router();
 
@@ -33,11 +33,12 @@ itemRouter.get("/:id", async (req: Request, res: Response) => {
 
 itemRouter.post("/", async (req: Request, res: Response) => {
   try {
-    const { title, description, image, price, userId } = req.body;
+    const { itemName, description, imageUrl, category, price, userId } = req.body;
     const newItem = new Item({
-      title,
+      itemName,
       description,
-      image,
+      imageUrl,
+      category,
       price,
       userId,
     });
@@ -70,11 +71,15 @@ itemRouter.put("/:id", async (req: Request, res: Response) => {
   }
 });
 
-itemRouter.delete("/:id", async (req: Request, res: Response) => {
+itemRouter.delete("/:id", async (req: Request, res: Response): Promise<any> => {
   try {
-    const deleteItem = await Item.findByIdAndDelete(req.params.id);
+    const deletedItem = await Item.findByIdAndDelete(req.params.id);
 
-    res.json({ message: "Item deleted" });
+    if (!deletedItem) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json({ message: `Item by name '${deletedItem.itemName}' with ID (ID: ${deletedItem._id}) was successfully deleted.`});
   } catch (error) {
     if (error instanceof Error) {
       res.status(500).json({ message: error.message });
