@@ -33,18 +33,19 @@ app.listen(PORT, () => {
 let shopitems = [
     {
         id: 1,
-        itemname: "1984",
-        price: "400kr",
-        description: "george orwell"
+        itemname: "tv",
+        price: "3000kr",
+        description: "only hade it for one year"
     },
     {
         id: 2,
-        itemname: "the Hobbit",
-        price: "400kr",
-        description: "J.R.R. Tolkien",
+        itemname: "gaming pc",
+        price: "20000kr",
+        description: "3 years behind on upgraded parts but works amazingly",
         
     }
 ];
+
 
 /**
  * @swagger
