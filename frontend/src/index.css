@@ -3,6 +3,13 @@
 @tailwind utilities;
 
 .clip-banner {
-    clip-path: polygon(0 0, 100% 0, 100% 70%, 50% 100%, 0 70%);
-  }
-  
+  clip-path: polygon(0 0, 100% 0, 100% 70%, 50% 100%, 0 70%);
+}
+
+@theme {
+  --color-1: #674c27;
+  --color-2: #d49b67;
+  --color-3: #cd8e2e;
+  --color-4: #eedec1;
+  --color-5: #a6ae81;
+}
