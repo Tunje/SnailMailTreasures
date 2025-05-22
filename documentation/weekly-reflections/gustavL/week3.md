@@ -1,0 +1,1 @@
+This week I have started working on the login/registration. I have set up some folders for the future, and the component files. The plan for the future is to try and connect the front-end with the backend so right now I'm just using localStorage for my user authentication.
