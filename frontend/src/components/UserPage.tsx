@@ -34,35 +34,17 @@ const UserPage: React.FC = () => {
           // If the API call fails (e.g., user doesn't exist yet), fall back to mock data
           console.log('Using mock data as fallback:', apiError);
           
-          const mockUser: User = {
-            _id: '1',
-            username: 'testuser',
-            email: 'test@example.com'
+          const naUser: User = {
+            _id: 'N/A',
+            username: 'N/A',
+            email: 'N/A'
           };
           
-          const mockItems: Item[] = [
-            {
-              _id: '101',
-              name: 'Vintage Postcard Collection',
-              description: 'A set of 10 vintage postcards from the 1950s',
-              image: 'https://via.placeholder.com/150',
-              price: 45.99,
-              userId: '1',
-              createdAt: new Date().toISOString()
-            },
-            {
-              _id: '102',
-              name: 'Rare Stamp Set',
-              description: 'Collection of rare stamps from around the world',
-              image: 'https://via.placeholder.com/150',
-              price: 89.99,
-              userId: '1',
-              createdAt: new Date().toISOString()
-            }
-          ];
+          // Set empty items array - no mock data
+          const naItems: Item[] = [];
           
-          setUser(mockUser);
-          setUserItems(mockItems);
+          setUser(naUser);
+          setUserItems(naItems);
         }
       } catch (err) {
         setError(err instanceof Error ? err.message : 'An unknown error occurred');
@@ -75,58 +57,62 @@ const UserPage: React.FC = () => {
   }, []);
   
   if (loading) {
-    return <div className="user-page loading">Loading user data...</div>;
+    return <div className="pt-32 w-full max-w-7xl mx-auto px-4 text-center py-12 text-gray-500">Loading user data...</div>;
   }
   
   if (error) {
-    return <div className="user-page error">Error: {error}</div>;
+    return <div className="pt-32 w-full max-w-7xl mx-auto px-4 text-center py-12 text-red-500">Error: {error}</div>;
   }
   
   if (!user) {
-    return <div className="user-page not-found">User not found. Please log in.</div>;
+    return <div className="pt-32 w-full max-w-7xl mx-auto px-4 text-center py-12 text-gray-500">User not found. Please log in.</div>;
   }
   
   return (
-    <div className="user-page">
-      <section className="user-profile">
-        <h1>User Profile</h1>
-        <div className="profile-container">
-          <div className="profile-image">
-            {/* Placeholder for user avatar */}
-            <div className="avatar-placeholder">
-              {user.username.charAt(0).toUpperCase()}
-            </div>
+    <div className="pt-32 w-full max-w-7xl mx-auto px-4">
+      <section className="bg-[var(--color-background)] rounded-lg p-8 mb-8">
+        <h1 className="section-title">User Profile</h1>
+        <div className="flex flex-col md:flex-row items-center md:items-start gap-8 p-4">
+          <div className="w-24 h-24 rounded-full bg-[var(--color-primary)] text-white flex items-center justify-center text-4xl font-bold">
+            {user.username.charAt(0).toUpperCase()}
           </div>
-          <div className="profile-details">
-            <h2>{user.username}</h2>
-            <p><strong>Email:</strong> {user.email}</p>
-            <p><strong>Member since:</strong> {new Date().toLocaleDateString()}</p>
-            <button className="edit-profile-button">Edit Profile</button>
+          <div className="flex-1">
+            <h2 className="text-2xl font-bold text-[var(--color-text)] mb-2">{user.username}</h2>
+            <p className="text-gray-700 mb-1"><span className="font-semibold">Email:</span> {user.email}</p>
+            <p className="text-gray-700 mb-4"><span className="font-semibold">Member since:</span> {new Date().toLocaleDateString()}</p>
+            <button className="btn-secondary">Edit Profile</button>
           </div>
         </div>
       </section>
       
-      <section className="user-items">
-        <h2>My Items</h2>
+      <section className="bg-white rounded-lg shadow-md p-8 mb-8">
+        <h2 className="section-title">My Items</h2>
         {userItems.length === 0 ? (
-          <p>You haven't listed any items yet.</p>
+          <p className="text-center text-gray-500 py-8">You haven't listed any items yet.</p>
         ) : (
-          <div className="items-grid">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
             {userItems.map(item => (
-              <div key={item._id} className="item-card">
-                <img src={item.image} alt={item.name} className="item-image" />
-                <h3>{item.name}</h3>
-                <p className="item-description">{item.description}</p>
-                <p className="item-price">${item.price.toFixed(2)}</p>
-                <div className="item-actions">
-                  <button className="edit-button">Edit</button>
-                  <button className="delete-button">Delete</button>
+              <div key={item._id} className="card">
+                <div 
+                  className="h-48 bg-cover bg-center" 
+                  style={{ backgroundImage: `url(${item.image})` }}
+                ></div>
+                <div className="p-4">
+                  <h3 className="text-xl font-semibold mb-2 text-[var(--color-primary)]">{item.name}</h3>
+                  <p className="text-gray-600 mb-3 text-sm">{item.description}</p>
+                  <p className="text-xl font-bold text-[var(--color-primary)] mb-4">${item.price.toFixed(2)}</p>
+                  <div className="flex justify-between">
+                    <button className="btn-secondary py-1 px-4">Edit</button>
+                    <button className="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-4 rounded-lg transition duration-300">Delete</button>
+                  </div>
                 </div>
               </div>
             ))}
           </div>
         )}
-        <button className="add-item-button">+ Add New Item</button>
+        <div className="mt-8 text-center">
+          <button className="btn-primary">+ Add New Item</button>
+        </div>
       </section>
     </div>
   );

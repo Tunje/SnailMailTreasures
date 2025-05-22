@@ -5,7 +5,6 @@ import { Item } from '../services/itemService';
 const PlaceholderHomePage: React.FC = () => {
   const [featuredItems, setFeaturedItems] = useState<Item[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchFeaturedItems = async () => {
@@ -15,10 +14,10 @@ const PlaceholderHomePage: React.FC = () => {
         // Get random items to feature (up to 3)
         const randomItems = items.sort(() => 0.5 - Math.random()).slice(0, 3);
         setFeaturedItems(randomItems);
-        setLoading(false);
       } catch (err) {
         console.error('Error fetching featured items:', err);
-        setError('Failed to load featured items. Please try again later.');
+        setFeaturedItems([]);
+      } finally {
         setLoading(false);
       }
     };
@@ -42,10 +41,11 @@ const PlaceholderHomePage: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {loading ? (
             <div className="col-span-full text-center py-12 text-gray-500">Loading featured items...</div>
-          ) : error ? (
-            <div className="col-span-full text-center py-12 text-red-500">{error}</div>
           ) : featuredItems.length === 0 ? (
-            <div className="col-span-full text-center py-12 text-gray-500">No featured items available at this time.</div>
+            <div className="col-span-full text-center py-12">
+              <p className="text-red-500 mb-2">Unable to connect to the backend server.</p>
+              <p className="text-gray-500">Please make sure MongoDB is running and the backend server is started.</p>
+            </div>
           ) : (
             featuredItems.map((item) => (
               <div className="card" key={item._id}>

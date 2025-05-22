@@ -13,7 +13,7 @@ export interface Item {
 
 // Get all items
 export const getAllItems = async (): Promise<Item[]> => {
-  const response = await api.get('/items');
+  const response = await api.get('/items/allitems');
   return response.data;
 };
 
@@ -25,7 +25,7 @@ export const getItemById = async (id: string): Promise<Item> => {
 
 // Get items by user ID
 export const getItemsByUserId = async (userId: string): Promise<Item[]> => {
-  const response = await api.get('/items');
+  const response = await api.get('/items/allitems');
   // Filter items by userId on the client side since the API doesn't have a direct endpoint
   return response.data.filter((item: Item) => item.userId === userId);
 };

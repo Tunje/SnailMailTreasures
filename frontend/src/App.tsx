@@ -6,6 +6,7 @@ import PlaceholderHomePage from './components/PlaceholderHomePage'
 import Login from './components/Login'
 import Registration from './components/Registration'
 import SearchResultsPage from './pages/SearchResultsPage'
+import UserPage from './components/UserPage'
 import seedService from './services/seedService'
 
 function App() {
@@ -27,10 +28,11 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Registration />} />
             <Route path="/search" element={<SearchResultsPage query={''} />} />
-            <Route path="/shop" element={<PlaceholderHomePage />} />
+            <Route path="/shop" element={<SearchResultsPage query={''} />} />
             <Route path="/deals" element={<PlaceholderHomePage />} />
             <Route path="/favorites" element={<PlaceholderHomePage />} />
             <Route path="/cart" element={<PlaceholderHomePage />} />
+            <Route path="/user" element={<UserPage />} />
           </Routes>
         </main>
       </div>

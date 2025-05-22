@@ -5,9 +5,9 @@ import axios from 'axios';
 
 type Item = {
   _id: string;
-  itemName: string;
+  name: string; // Backend uses 'name' instead of 'itemName'
   description: string;
-  imageUrl: string;
+  image: string; // Backend uses 'image' instead of 'imageUrl'
   price: number;
 };
 
@@ -21,15 +21,18 @@ export default function SearchResultsPage({ query }: { query: string }) {
 
   useEffect(() => {
     const fetchResults = async () => {
-      if (!urlQuery || !urlQuery.trim()) return;
       setLoading(true);
       try {
-        const res = await axios.get<Item[]>(
-          `http://localhost:3000/api/search?q=${encodeURIComponent(urlQuery)}`
-        );
+        // If query is empty, get all items (for shop page)
+        const endpoint = !urlQuery || !urlQuery.trim() 
+          ? 'http://localhost:3000/api/items/allitems' 
+          : `http://localhost:3000/api/items/search?q=${encodeURIComponent(urlQuery)}`;
+          
+        const res = await axios.get<Item[]>(endpoint);
         setResults(res.data);
       } catch (err) {
         console.error('Error fetching search results:', err);
+        setResults([]);
       } finally {
         setLoading(false);
       }
@@ -40,11 +43,16 @@ export default function SearchResultsPage({ query }: { query: string }) {
 
   return (
     <div className="pt-32 px-8 min-h-screen bg-[#FDF4DF]">
-      <h1 className="text-3xl font-bold mb-6">Search results for: "{urlQuery}"</h1>
+      <h1 className="text-3xl font-bold mb-6">
+        {!urlQuery || !urlQuery.trim() ? "All Items" : `Search results for: "${urlQuery}"`}
+      </h1>
       {loading ? (
         <p>Loading...</p>
       ) : results.length === 0 ? (
-        <p>No items found.</p>
+        <div className="text-center py-12">
+          <p className="text-red-500 mb-2">Unable to connect to the backend server.</p>
+          <p className="text-gray-500">Please make sure MongoDB is running and the backend server is started.</p>
+        </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
           {results.map((item) => (
@@ -53,11 +61,11 @@ export default function SearchResultsPage({ query }: { query: string }) {
               className="bg-white rounded-lg shadow-md p-4 cursor-pointer hover:shadow-lg transition"
             >
               <img
-                src={item.imageUrl}
-                alt={item.itemName}
+                src={item.image}
+                alt={item.name}
                 className="w-full h-48 object-cover rounded-md mb-2"
               />
-              <h2 className="text-xl font-semibold">{item.itemName}</h2>
+              <h2 className="text-xl font-semibold">{item.name}</h2>
               <p className="text-gray-600 truncate">{item.description}</p>
               <p className="text-[#CB8427] font-bold mt-1">
                 ${item.price.toFixed(2)}
