@@ -14,9 +14,9 @@ const UserPage: React.FC = () => {
       try {
         setLoading(true);
         
-        // For demonstration purposes, we'll use a hardcoded username
+        // For demonstration purposes, we'll use a hardcoded username from our seed data
         // In a real app, this would come from authentication or route params
-        const username = 'testuser';
+        const username = 'vintage_lover';
         
         try {
           // Fetch user data
@@ -61,7 +61,12 @@ const UserPage: React.FC = () => {
   }
   
   if (error) {
-    return <div className="pt-32 w-full max-w-7xl mx-auto px-4 text-center py-12 text-red-500">Error: {error}</div>;
+    return (
+      <div className="pt-32 w-full max-w-7xl mx-auto px-4 text-center py-12">
+        <p className="text-red-500 mb-2">Error: {error}</p>
+        <p className="text-gray-500">Please make sure MongoDB is running and the backend server is started.</p>
+      </div>
+    );
   }
   
   if (!user) {
