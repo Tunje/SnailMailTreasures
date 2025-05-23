@@ -1,11 +1,18 @@
 import seedData from '../data/seedData.json';
 import { getAllUsers, createUser } from './userService';
-import { createItem, Item } from './itemService';
+import { createItem } from './itemService';
 
 /**
- * Service to handle database seeding operations
+ * Service for seeding the database with initial data
  */
 export const seedService = {
+  /**
+   * Helper function to add delay between operations
+   */
+  delay(ms: number): Promise<void> {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  },
+
   /**
    * Check if the database needs seeding by checking if users exist
    */
@@ -29,42 +36,58 @@ export const seedService = {
       // Track created users to associate items
       const createdUsers: any[] = [];
       
-      // Create users
+      // Create users - try multiple times with different usernames if needed
+      // Use for...of loop with await to ensure sequential processing
       for (const userData of seedData.users) {
+        // Add a delay between user creation attempts to prevent database conflicts
+        await this.delay(1000); // 1 second delay
         try {
+          // Try to create the user with original username
           const user = await createUser(userData);
           createdUsers.push(user);
           console.log(`Created user: ${user.username}`);
         } catch (error) {
-          console.error(`Error creating user ${userData.username}:`, error);
+          console.error(`Error creating user ${userData.username}, trying with a unique username:`, error);
+          
+          // Try again with a unique username
+          try {
+            const uniqueUserData = {
+              username: `${userData.username}_${Date.now()}`,
+              email: `${userData.username}_${Date.now()}@example.com`
+            };
+            
+            const user = await createUser(uniqueUserData);
+            createdUsers.push(user);
+            console.log(`Created user with unique name: ${user.username  || user.username}`);
+          } catch (retryError) {
+            console.error(`Failed to create user even with unique username:`, retryError);
+          }
         }
       }
       
-      // Create items for each user
+      // Create items with a hardcoded user ID
       for (let i = 0; i < seedData.items.length; i++) {
         const item = seedData.items[i];
         
-        // Extract user index from the userId (e.g., "user1" -> 0)
-        const userIndex = parseInt(item.userId.replace('user', '')) - 1;
-        
-        // Skip if user wasn't created successfully
-        if (!createdUsers[userIndex]) {
-          console.warn(`Skipping item ${item.name} as user index ${userIndex} was not created`);
-          continue;
-        }
-        
         try {
-          // Add real userId to the item data
+          // Use a hardcoded user ID that exists in your database
+          const hardcodedUserId = '646fa2a4c7ef5a8f144a5eff'; // Replace with a valid MongoDB ObjectId from your database
+          
+          // Add hardcoded userId to the item data and ensure all required fields are present
           const itemData = {
-            name: item.name,
-            description: item.description,
-            image: item.image,
-            price: item.price,
-            userId: createdUsers[userIndex]._id
+            itemName: item.name,
+            description: item.description || 'No description provided',
+            imageUrl: item.image || 'https://via.placeholder.com/150', // Fallback image URL
+            category: 'Miscellaneous', // Default category since it's required
+            price: item.price ? parseFloat(item.price.toString()) : 0, // Ensure price is a number
+            userId: hardcodedUserId
           };
           
-          const createdItem = await createItem(itemData);
-          console.log(`Created item: ${createdItem.name} for user: ${createdUsers[userIndex].username}`);
+          // Log the data being sent to help debug
+          console.log('Creating item with data:', JSON.stringify(itemData, null, 2));
+          
+          await createItem(itemData);
+          console.log(`Created item: ${item.name} with hardcoded user ID`);
         } catch (error) {
           console.error(`Error creating item ${item.name}:`, error);
         }
