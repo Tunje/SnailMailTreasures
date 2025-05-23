@@ -8,7 +8,7 @@ import Cart from './pages/Cart';
 import Shop from './pages/Shop';
 import Favorites from './pages/Favorites';
 import Deals from './pages/Deals';
-import Register from './pages/register';
+import Register from './pages/Register';
 
 function App() {
   return (
@@ -16,7 +16,7 @@ function App() {
       <Navbar /> {/* Always rendered */}
       <Routes>
         <Route path="/" element={<Homepage />} />
-        <Route path="/search" element={<SearchResultsPage />} />
+        <Route path="/search" element={<SearchResultsPage query="example-query" />} />
         <Route path="/login" element={<Login />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/shop" element={<Shop />} />
