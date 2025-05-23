@@ -1,25 +1,42 @@
 import { useState } from "react";
+import { createUser } from "../services/userService";
 
 const Registration = () => {
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [username, setUsername] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
 
-  const storeUser = () => {
-    const user = {
-      username: username,
-      email: email,
-      password: password,
-    };
-    localStorage.setItem("user", JSON.stringify(user));
+  const storeUser = async (e: any) => {
+    e.preventDefault();
+
+    if (!username || !email) {
+      alert("Please fill in all fields");
+      return;
+    } else if (username.length < 6) {
+      alert("Username must be at least 6 characters long");
+      return;
+    } else if (password.length < 6) {
+      alert("Password must be at least 6 characters long");
+      return;
+    } else if (email.indexOf("@") === -1) {
+      alert("Please enter a valid email address");
+      return;
+    }
+
+    try {
+      await createUser({ username, email });
+      alert("User registered successfully");
+    } catch (err) {
+      console.error("Error fetching user data:", err);
+    }
   };
 
   return (
     <div>
       <h1>Registration</h1>
-      <form>
+      <form onSubmit={(e) => storeUser(e)}>
         <div>
-          <label htmlFor="username">Username:</label>
+          <label>Username:</label>
           <input
             type="text"
             name="username"
@@ -29,7 +46,7 @@ const Registration = () => {
           />
         </div>
         <div>
-          <label htmlFor="email">Email:</label>
+          <label>Email:</label>
           <input
             type="email"
             name="email"
@@ -39,7 +56,7 @@ const Registration = () => {
           />
         </div>
         <div>
-          <label htmlFor="password">Password:</label>
+          <label>Password:</label>
           <input
             type="password"
             name="password"
@@ -48,9 +65,7 @@ const Registration = () => {
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
-        <button type="submit" onClick={storeUser}>
-          Register
-        </button>
+        <button type="submit">Register</button>
       </form>
     </div>
   );
