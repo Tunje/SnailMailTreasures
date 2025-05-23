@@ -1,31 +1,15 @@
 import { useState } from "react";
-import axios from "axios";
-
-type User = {
-  userName: string;
-  email: string;
-  password: string;
-};
+import { createUser } from "../services/userService";
 
 const Registration = () => {
   const [username, setUsername] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const [newUser, setNewUser] = useState({} as User);
 
-  const createUser = async () => {
-    try {
-      await axios.post(`http://localhost:5173/api/user/register`, newUser);
-      alert("User registered successfully");
-    } catch (err) {
-      console.error("Error fetching user data:", err);
-    }
-  };
-
-  const storeUser = (e: any) => {
+  const storeUser = async (e: any) => {
     e.preventDefault();
 
-    if (!username || !email || !password) {
+    if (!username || !email) {
       alert("Please fill in all fields");
       return;
     } else if (username.length < 6) {
@@ -38,8 +22,13 @@ const Registration = () => {
       alert("Please enter a valid email address");
       return;
     }
-    setNewUser({ userName: username, email: email, password: password });
-    createUser();
+
+    try {
+      await createUser({ username, email });
+      alert("User registered successfully");
+    } catch (err) {
+      console.error("Error fetching user data:", err);
+    }
   };
 
   return (
