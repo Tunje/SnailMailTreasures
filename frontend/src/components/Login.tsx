@@ -1,39 +1,36 @@
 import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import axios from "axios";
 
 const Login = () => {
   const navigate = useNavigate();
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const [user, setUser] = useState<any>(null);
 
-  const fetchUser = async () => {
-    try {
-      const response = await axios.get(`http://localhost:5173/api/user/login`);
-      setUser(response.data);
-      console.log("User data:", response.data);
-    } catch (err) {
-      console.error("Error fetching user data:", err);
-    }
-  };
-
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    fetchUser();
+
     if (!username || !password) {
       alert("Please fill in all fields");
       return;
-    } else if (username !== user?.username) {
-      alert("Username not found");
-      return;
-    } else if (password !== user?.password) {
-      alert("Incorrect password");
-      return;
-    } else if (username === user.username && password === user.password) {
-      alert("Login successful");
     }
-    navigate("/home");
+
+    try {
+      // Send credentials to backend for verification
+      const response = await axios.post(
+        "http://localhost:5173/api/user/login",
+        { username, password }
+      );
+      if (response.data.success) {
+        alert("Login successful");
+        navigate("/home");
+      } else {
+        alert("Incorrect username or password");
+      }
+    } catch (error) {
+      alert("An error occurred during login");
+      console.error(error);
+    }
   };
 
   return (
