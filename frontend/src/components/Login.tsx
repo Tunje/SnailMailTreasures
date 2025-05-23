@@ -10,7 +10,7 @@ const Login = () => {
 
   const fetchUser = async () => {
     try {
-      const response = await axios.get(`http://localhost:3000/api/user`);
+      const response = await axios.get(`http://localhost:5173/api/user/login`);
       setUser(response.data);
       console.log("User data:", response.data);
     } catch (err) {
