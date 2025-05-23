@@ -1,161 +1,92 @@
-import { useState, useEffect } from 'react';
-import axios from 'axios';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import SearchBar from './SearchBar';
 
-type Item = {
-  _id: string;
-  itemName: string;
-  description: string;
-  imageUrl: string;
-  price: number;
-};
 
 export default function Navbar() {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [searchResults, setSearchResults] = useState<Item[]>([]);
-  const [showResults, setShowResults] = useState(false);
-  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-
   const [activeNav, setActiveNav] = useState<string | null>(null);
   const [cartCount] = useState(0);
 
-  useEffect(() => {
-    if (!searchTerm.trim()) {
-      setSearchResults([]);
-      setShowResults(false);
-      return;
-    }
-
-    const fetchResults = async () => {
-      setLoading(true);
-      try {
-        const res = await axios.get<Item[]>(
-          `http://localhost:3000/api/items/search?q=${encodeURIComponent(
-            searchTerm
-          )}`
-        );
-        setSearchResults(res.data);
-        setShowResults(true);
-      } catch (error) {
-        console.error('Search error:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    const debounce = setTimeout(fetchResults, 300);
-    return () => clearTimeout(debounce);
-  }, [searchTerm]);
-
   return (
     <>
-      <nav className="fixed top-0 left-0 w-full z-50 bg-[#FDF4DF] pt-2 pb-4">
-        <div className="px-4 flex flex-col gap-4 md:flex-row md:justify-between md:items-center">
+      <nav className="fixed-auto top-0 left-10 right-10 w-full z-50 bg-[#FDF4DF] pt-2 pb-4 ">
+        <div className="justify-between flex items-center w-full max-w-[1350px] mx-auto">
           {/* Logo */}
-          <div className="flex items-center gap-6">
-            <img
-              src="/snailmail-logo.png"
-              alt="Snailmail Logo"
-              className="w-[102px] h-[100px] cursor-pointer hover:scale-105 transition"
-              onClick={() => {
-                navigate('/');
-                setActiveNav(null);
-                setShowResults(false);
-                setSearchTerm('');
-              }}
-            />
-          </div>
+          <img
+            src="/snailmail-logo.png"
+            alt="Snailmail Logo"
+            className="w-[102px] h-[100px] cursor-pointer hover:scale-105 transition"
+            onClick={() => {
+              navigate('/');
+              setActiveNav(null);
+            }}
+          />
 
-          {/* Search */}
-          <div className="flex items-center bg-white px-4 py-2 rounded-full shadow-md w-full md:w-[500px]">
-            <input
-              type="text"
-              placeholder="Search..."
-              className="bg-transparent outline-none px-2 text-sm flex-grow"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-            <button
-              className={`px-4 py-1 rounded-lg text-sm transition
-                ${activeNav === 'search'
-                  ? 'bg-blue-400 text-white scale-105'
-                  : 'bg-[#7A7C56] text-white hover:scale-105 active:scale-95'
-                }`}
-              onClick={() => {
-                setActiveNav('search');
-                navigate('/search?q=' + encodeURIComponent(searchTerm));
-                setSearchResults([]);
-                setLoading(true);
-                setTimeout(() => {
-                  setLoading(false);
-                  setActiveNav(null);
-                }, 1000);
-              }}
-            >
-              SEARCH
-            </button>
-          </div>
+          <SearchBar />
 
-          {/* Login/Cart */}
-          <div className="flex gap-4">
+          {/* Login and Cart */}
+          <div className="flex items-center gap-4">
+            {/* Login */}
+
             <button
-              className={`rounded-full font-grover px-4 py-3 text-lg transition
-                ${activeNav === 'login'
-                  ? 'bg-blue-400 text-white scale-105'
-                  : 'bg-gray-200 hover:bg-gray-300 hover:scale-105 active:scale-95'
-                }`}
+              className="bg-[#7A7C56] rounded-full px-[14px] py-[9px]  hover:bg-[#D89C6A] transition p-[8px] mr-[10px] "
               onClick={() => {
                 navigate('/login');
                 setActiveNav('login');
-                setShowResults(false);
-                setSearchTerm('');
-                setTimeout(() => setActiveNav(null), 500);
               }}
             >
-              login
+              LOGIN
             </button>
-            <div className="relative">
+
+            {/* Cart */}
+            <div className="relative ">
               <button
-                className={`rounded-full font-grover px-4 py-3 text-lg transition
-                  ${activeNav === 'cart'
-                    ? 'bg-blue-400 text-white scale-105'
-                    : 'bg-gray-200 hover:bg-gray-300 hover:scale-105 active:scale-95'
-                  }`}
+                className={`bg-[#7A7C56] rounded-full p-[8px] px-[14px] py-[9px] transition
+        ${
+          activeNav === 'cart'
+            ? 'scale-105'
+            : 'hover:bg-[#D89C6A] hover:scale-105 active:scale-95 '
+        }`}
                 onClick={() => {
                   setActiveNav('cart');
                   navigate('/cart');
                   setTimeout(() => setActiveNav(null), 500);
                 }}
               >
-                cart
+                CART
               </button>
-              <div className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">
+              <div className="absolute top-[-12px] right-[-5px]  font-bold px-2 py-0.5 rounded-full">
                 {cartCount}
               </div>
             </div>
           </div>
         </div>
-      
+
         {/* Banner */}
-        <div className="clip-banner bg-[#CB8427] text-center py-6 md:py-8 mt-4 mb-2 md:mt-2 md:mb-1 w-full">
-          <h1 className="text-5xl font-grover">Snail Mail</h1>
+        <div className="clip-banner bg-[#CB8427] text-center py-4 max-w-[350px] mx-auto p-[8px]">
+          <h1 className="text-8xl font-grover">Snail Mail</h1>
         </div>
 
         {/* Circles */}
         <div className="flex justify-around mt-[-4px] mb-8">
-          {['shop', 'home', 'deals', 'favorites'].map((label) => (
+          {[
+            { label: 'shop', path: '/shop' },
+            { label: 'home', path: '/' },
+            { label: 'deals', path: '/deals' },
+            { label: 'favorites', path: '/favorites' },
+          ].map(({ label, path }) => (
             <div
               key={label}
-              className={`w-[80px] h-[75px] flex items-center justify-center rounded-full shadow-md font-grover text-lg font-bold
-                cursor-pointer transition ${
-                  activeNav === label
-                    ? 'bg-blue-400 text-white'
-                    : 'bg-[#D89C6A] hover:scale-105 active:scale-95'
-                }`}
+              className={`w-[80px] h-[75px] flex items-center justify-center rounded-full shadow-md font-grover text-sm font-bold
+        cursor-pointer transition ${
+          activeNav === label
+            ? 'bg-blue-400 text-white'
+            : 'bg-[#D89C6A] hover:scale-105 active:scale-95'
+        }`}
               onClick={() => {
                 setActiveNav(label);
-                navigate(`/${label}`);
+                navigate(path);
                 setTimeout(() => {
                   setActiveNav(null);
                 }, 500);
@@ -166,42 +97,6 @@ export default function Navbar() {
           ))}
         </div>
       </nav>
-
-      {/* ⬇️ Search Results */}
-      <div className="pt-[300px] px-8 bg-[#FDF4DF] min-h-screen">
-        {showResults && (
-          <>
-            <h1 className="text-3xl font-bold mb-6">
-              Search results for: "{searchTerm}"
-            </h1>
-            {loading ? (
-              <p>Loading...</p>
-            ) : searchResults.length === 0 ? (
-              <p>No items found.</p>
-            ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                {searchResults.map((item) => (
-                  <div
-                    key={item._id}
-                    className="bg-white rounded-lg shadow-md p-4 cursor-pointer hover:shadow-lg transition"
-                  >
-                    <img
-                      src={item.imageUrl}
-                      alt={item.itemName}
-                      className="w-full h-48 object-cover rounded-md mb-2"
-                    />
-                    <h2 className="text-xl font-semibold">{item.itemName}</h2>
-                    <p className="text-gray-600 truncate">{item.description}</p>
-                    <p className="text-[#CB8427] font-bold mt-1">
-                      ${item.price.toFixed(2)}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            )}
-          </>
-        )}
-      </div>
     </>
   );
 }
