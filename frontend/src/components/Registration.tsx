@@ -1,25 +1,53 @@
 import { useState } from "react";
+import axios from "axios";
+
+type User = {
+  userName: string;
+  email: string;
+  password: string;
+};
 
 const Registration = () => {
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [username, setUsername] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [newUser, setNewUser] = useState({} as User);
 
-  const storeUser = () => {
-    const user = {
-      username: username,
-      email: email,
-      password: password,
-    };
-    localStorage.setItem("user", JSON.stringify(user));
+  const createUser = async () => {
+    try {
+      await axios.post(`http://localhost:5173/api/user/register`, newUser);
+      alert("User registered successfully");
+    } catch (err) {
+      console.error("Error fetching user data:", err);
+    }
+  };
+
+  const storeUser = (e: any) => {
+    e.preventDefault();
+
+    if (!username || !email || !password) {
+      alert("Please fill in all fields");
+      return;
+    } else if (username.length < 6) {
+      alert("Username must be at least 6 characters long");
+      return;
+    } else if (password.length < 6) {
+      alert("Password must be at least 6 characters long");
+      return;
+    } else if (email.indexOf("@") === -1) {
+      alert("Please enter a valid email address");
+      return;
+    }
+    setNewUser({ userName: username, email: email, password: password });
+    createUser();
   };
 
   return (
     <div>
       <h1>Registration</h1>
-      <form>
+      <form onSubmit={(e) => storeUser(e)}>
         <div>
-          <label htmlFor="username">Username:</label>
+          <label>Username:</label>
           <input
             type="text"
             name="username"
@@ -29,7 +57,7 @@ const Registration = () => {
           />
         </div>
         <div>
-          <label htmlFor="email">Email:</label>
+          <label>Email:</label>
           <input
             type="email"
             name="email"
@@ -39,7 +67,7 @@ const Registration = () => {
           />
         </div>
         <div>
-          <label htmlFor="password">Password:</label>
+          <label>Password:</label>
           <input
             type="password"
             name="password"
@@ -48,9 +76,7 @@ const Registration = () => {
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
-        <button type="submit" onClick={storeUser}>
-          Register
-        </button>
+        <button type="submit">Register</button>
       </form>
     </div>
   );
