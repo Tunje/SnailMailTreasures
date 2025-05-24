@@ -1,14 +1,13 @@
 import "./index.css";
 import Navbar from "./components/navbar";
+import Footer from "./components/footer";
 
 function App() {
   return (
     <>
       <Navbar />
-      <div className="bg-blue-500 text-white p-4 rounded">Tailwind Works!</div>
-      <div className="bg-green-500 text-white p-4 text-2xl rounded">
-        ✅ Tailwind is working now!
-      </div>
+      <div className="pt-[400px]"/>
+      <Footer />
     </>
   );
 }

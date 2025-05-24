@@ -16,7 +16,6 @@ export default function Navbar() {
             alt="Snailmail Treasures Logo"
             className="w-[102px] h-[100px] cursor-pointer hover:scale-105 transition"
             onClick={() => {
-              console.log("Logo clicked");
               navigate("/");
             }}
           />
