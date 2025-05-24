@@ -1,12 +1,12 @@
+/** @type {import('tailwindcss').Config} */
 export default {
-    content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
-    theme: {
-      extend: {
-        fontFamily: {
-          grover: ['"Irish Grover"', 'cursive'],
-        },
+  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
+  theme: {
+    extend: {
+      fontFamily: {
+        grover: ['"Irish Grover"', 'cursive'],
       },
     },
-    plugins: [],
-  }
-  
+  },
+  plugins: [],
+};

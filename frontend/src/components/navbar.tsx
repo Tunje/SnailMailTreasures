@@ -1,20 +1,62 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from 'react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+
+type Item = {
+  _id: string;
+  itemName: string;
+  description: string;
+  imageUrl: string;
+  price: number;
+};
 
 export default function Navbar() {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [searchResults, setSearchResults] = useState<Item[]>([]);
+  const [showResults, setShowResults] = useState(false);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
   const [activeNav, setActiveNav] = useState<string | null>(null);
-  const [cartCount, setCartCount] = useState(0);
+  const [cartCount] = useState(0);
+
+  useEffect(() => {
+    if (!searchTerm.trim()) {
+      setSearchResults([]);
+      setShowResults(false);
+      return;
+    }
+
+    const fetchResults = async () => {
+      setLoading(true);
+      try {
+        const res = await axios.get<Item[]>(
+          `http://localhost:3000/api/items/search?q=${encodeURIComponent(
+            searchTerm
+          )}`
+        );
+        setSearchResults(res.data);
+        setShowResults(true);
+      } catch (error) {
+        console.error('Search error:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    const debounce = setTimeout(fetchResults, 300);
+    return () => clearTimeout(debounce);
+  }, [searchTerm]);
 
   return (
-    <nav className="fixed top-0 left-0 w-full z-50 bg-[#FDF4DF] pt-1 pb-2">
+    <nav className="fixed top-0 left-0 w-full z-50 bg-[#FDF4DF] pt-2 pb-4">
       <div className="px-4 flex flex-col gap-4 md:flex-row md:justify-between md:items-center">
         {/* Logo */}
         <div className="flex items-center gap-6">
           <img
             src="/snailmail-logo.png"
             alt="Snailmail Treasures Logo"
-            className="w-[85px] h-[75px] cursor-pointer hover:scale-105 transition"
+            className="w-[102px] h-[100px] cursor-pointer hover:scale-105 transition"
             onClick={() => {
               console.log("Logo clicked");
               navigate("/");
@@ -23,7 +65,7 @@ export default function Navbar() {
         </div>
 
         {/* Search */}
-        <div className="flex items-center bg-white px-2 py-1 rounded-half shadow-md w-full md:w-[600px]">
+        <div className="flex items-center bg-white px-4 py-2 rounded-full shadow-md w-full md:w-[500px]">
           <input
             type="text"
             placeholder="Search..."
@@ -31,11 +73,11 @@ export default function Navbar() {
           />
           <button
             className={`px-4 py-1 rounded-lg text-sm transition
-          ${
-            activeNav === "search"
-              ? "bg-blue-400 text-white scale-105"
-              : "bg-[#7A7C56] text-white hover:scale-105 active:scale-95"
-          }`}
+    ${
+      activeNav === "search"
+        ? "bg-blue-400 text-white scale-105"
+        : "bg-[#7A7C56] text-white hover:scale-105 active:scale-95"
+    }`}
             onClick={() => {
               setActiveNav("search");
               setTimeout(() => setActiveNav(null), 500);
@@ -48,7 +90,7 @@ export default function Navbar() {
         {/* Login/Cart */}
         <div className="flex gap-4 flex-wrap justify-center md:justify-end">
           <button
-            className={`rounded-full font-grover px-3 py-0 text-lg transition
+            className={`rounded-full font-grover px-4 py-3 text-lg transition
             ${
               activeNav === "login"
                 ? "bg-blue-400 text-white scale-105"
@@ -65,7 +107,7 @@ export default function Navbar() {
 
           <div className="relative">
             <button
-              className={`rounded-full font-grover px-4 py-1 text-lg transition
+              className={`rounded-full font-grover px-4 py-3 text-lg transition
             ${
               activeNav === "cart"
                 ? "bg-blue-400 text-white scale-105"
@@ -88,22 +130,22 @@ export default function Navbar() {
       </div>
 
       {/* Banner */}
-      <div className="clip-banner bg-[#CB8427] text-center py-4 md:py-4 mt-2 mb-1 md:mt-1 md:mb-2 w-full">
-        <h1 className="text-4xl font-grover">Snail Mail</h1>
+      <div className="clip-banner bg-[#CB8427] text-center py-6 md:py-8 mt-4 mb-2 md:mt-2 md:mb-1 w-full">
+        <h1 className="text-5xl font-grover">Snail Mail</h1>
       </div>
 
       {/* Circles */}
-      <div className="flex justify-around mt-[-0px] mb-0">
-        {["shop", "home", "deals", "profiles"].map((label) => (
+      <div className="flex justify-around mt-[-4px] mb-8">
+        {["shop", "home", "deals", "favorites"].map((label) => (
           <div
             key={label}
-            className={`w-[90px] h-[55px] flex items-center justify-center rounded-full shadow-md font-grover text-lg font-bold
-            cursor-pointer transition
-            ${
-              activeNav === label
-                ? "bg-blue-400  text-white"
-                : "bg-[#D89C6A] hover:scale-105 active:scale-95"
-            }`}
+            className={`w-[80px] h-[75px] flex items-center justify-center rounded-full shadow-md font-grover text-lg font-bold
+                cursor-pointer transition
+                ${
+                  activeNav === label
+                    ? "bg-blue-400  text-white"
+                    : "bg-[#D89C6A] hover:scale-105 active:scale-95"
+                }`}
             onClick={() => {
               setActiveNav(label);
               navigate(`/${label}`);
