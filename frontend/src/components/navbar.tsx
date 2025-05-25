@@ -1,13 +1,13 @@
-import { useState, useEffect } from 'react';
-import axios from 'axios';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import seedData from '../data/seedData.json';
 
 type Item = {
-  _id: string;
-  itemName: string;
+  name: string;
   description: string;
-  imageUrl: string;
+  image: string;
   price: number;
+  userId: string;
 };
 
 export default function Navbar() {
@@ -16,10 +16,26 @@ export default function Navbar() {
   const [showResults, setShowResults] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   const [activeNav, setActiveNav] = useState<string | null>(null);
   const [cartCount] = useState(0);
 
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setShowResults(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  // Update search results when searchTerm changes
   useEffect(() => {
     if (!searchTerm.trim()) {
       setSearchResults([]);
@@ -27,25 +43,18 @@ export default function Navbar() {
       return;
     }
 
-    const fetchResults = async () => {
-      setLoading(true);
-      try {
-        const res = await axios.get<Item[]>(
-          `http://localhost:3000/api/items/search?q=${encodeURIComponent(
-            searchTerm
-          )}`
-        );
-        setSearchResults(res.data);
-        setShowResults(true);
-      } catch (error) {
-        console.error('Search error:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
+    setLoading(true);
 
-    const debounce = setTimeout(fetchResults, 300);
-    return () => clearTimeout(debounce);
+    const timeoutId = setTimeout(() => {
+      const filtered = seedData.items.filter((item) =>
+        item.name.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      setSearchResults(filtered);
+      setShowResults(true);
+      setLoading(false);
+    }, 300); // debounce 300ms
+
+    return () => clearTimeout(timeoutId);
   }, [searchTerm]);
 
   return (
@@ -68,42 +77,74 @@ export default function Navbar() {
           </div>
 
           {/* Search */}
-          <div className="flex items-center bg-white px-4 py-2 rounded-full shadow-md w-full md:w-[500px]">
+          <div className="relative flex items-center bg-white px-4 py-2 rounded-full shadow-md w-full md:w-[500px]">
             <input
               type="text"
               placeholder="Search..."
               className="bg-transparent outline-none px-2 text-sm flex-grow"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
+              onFocus={() => {
+                if (searchResults.length > 0) setShowResults(true);
+              }}
             />
             <button
               className={`px-4 py-1 rounded-lg text-sm transition
-                ${activeNav === 'search'
-                  ? 'bg-blue-400 text-white scale-105'
-                  : 'bg-[#7A7C56] text-white hover:scale-105 active:scale-95'
+                ${
+                  activeNav === 'search'
+                    ? 'bg-blue-400 text-white scale-105'
+                    : 'bg-[#7A7C56] text-white hover:scale-105 active:scale-95'
                 }`}
               onClick={() => {
                 setActiveNav('search');
+                setShowResults(false);
                 navigate('/search?q=' + encodeURIComponent(searchTerm));
-                setSearchResults([]);
-                setLoading(true);
                 setTimeout(() => {
-                  setLoading(false);
                   setActiveNav(null);
                 }, 1000);
               }}
             >
               SEARCH
             </button>
+
+            {/* Autocomplete Dropdown */}
+            {showResults && !loading && searchResults.length > 0 && (
+              <div
+                ref={dropdownRef}
+                className="absolute top-full left-0 right-0 mt-1 max-h-60 overflow-auto rounded-md bg-white shadow-lg z-50"
+              >
+                {searchResults.slice(0, 5).map((item) => (
+                  <div
+                    key={item.userId}
+                    className="cursor-pointer px-4 py-2 hover:bg-gray-100"
+                    onClick={() => {
+                      setSearchTerm(item.name);
+                      setShowResults(false);
+                      // Optionally navigate immediately:
+                      // navigate('/search?q=' + encodeURIComponent(item.name));
+                    }}
+                  >
+                    {item.name}
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {loading && (
+              <div className="absolute top-full left-0 right-0 mt-1 rounded-md bg-white shadow-lg z-50 px-4 py-2">
+                Loading...
+              </div>
+            )}
           </div>
 
           {/* Login/Cart */}
           <div className="flex gap-4">
             <button
               className={`rounded-full font-grover px-4 py-3 text-lg transition
-                ${activeNav === 'login'
-                  ? 'bg-blue-400 text-white scale-105'
-                  : 'bg-gray-200 hover:bg-gray-300 hover:scale-105 active:scale-95'
+                ${
+                  activeNav === 'login'
+                    ? 'bg-blue-400 text-white scale-105'
+                    : 'bg-gray-200 hover:bg-gray-300 hover:scale-105 active:scale-95'
                 }`}
               onClick={() => {
                 navigate('/login');
@@ -118,9 +159,10 @@ export default function Navbar() {
             <div className="relative">
               <button
                 className={`rounded-full font-grover px-4 py-3 text-lg transition
-                  ${activeNav === 'cart'
-                    ? 'bg-blue-400 text-white scale-105'
-                    : 'bg-gray-200 hover:bg-gray-300 hover:scale-105 active:scale-95'
+                  ${
+                    activeNav === 'cart'
+                      ? 'bg-blue-400 text-white scale-105'
+                      : 'bg-gray-200 hover:bg-gray-300 hover:scale-105 active:scale-95'
                   }`}
                 onClick={() => {
                   setActiveNav('cart');
@@ -136,7 +178,7 @@ export default function Navbar() {
             </div>
           </div>
         </div>
-      
+
         {/* Banner */}
         <div className="clip-banner bg-[#CB8427] text-center py-6 md:py-8 mt-4 mb-2 md:mt-2 md:mb-1 w-full">
           <h1 className="text-5xl font-grover">Snail Mail</h1>
@@ -166,42 +208,6 @@ export default function Navbar() {
           ))}
         </div>
       </nav>
-
-      {/* ⬇️ Search Results */}
-      <div className="pt-[300px] px-8 bg-[#FDF4DF] min-h-screen">
-        {showResults && (
-          <>
-            <h1 className="text-3xl font-bold mb-6">
-              Search results for: "{searchTerm}"
-            </h1>
-            {loading ? (
-              <p>Loading...</p>
-            ) : searchResults.length === 0 ? (
-              <p>No items found.</p>
-            ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                {searchResults.map((item) => (
-                  <div
-                    key={item._id}
-                    className="bg-white rounded-lg shadow-md p-4 cursor-pointer hover:shadow-lg transition"
-                  >
-                    <img
-                      src={item.imageUrl}
-                      alt={item.itemName}
-                      className="w-full h-48 object-cover rounded-md mb-2"
-                    />
-                    <h2 className="text-xl font-semibold">{item.itemName}</h2>
-                    <p className="text-gray-600 truncate">{item.description}</p>
-                    <p className="text-[#CB8427] font-bold mt-1">
-                      ${item.price.toFixed(2)}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            )}
-          </>
-        )}
-      </div>
     </>
   );
 }
