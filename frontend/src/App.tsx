@@ -21,7 +21,7 @@ function App() {
     <Router>
       <Navbar />
       <div className="flex flex-col min-h-screen w-full max-w-7xl mx-auto">
-        <main className="flex-1 py-8 px-4">
+        <main className="flex-1 py-8 px-4 mt-[300px]">
           <Routes>
             <Route path="/" element={<Navigate to="/home" />} />
             <Route path="/home" element={<PlaceholderHomePage />} />
