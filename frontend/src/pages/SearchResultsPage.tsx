@@ -1,63 +1,52 @@
-// src/pages/SearchResultsPage.tsx
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import axios from 'axios';
+import seedData from '../data/seedData.json'; // Adjust path as needed
 
 type Item = {
-  _id: string;
-  name: string; // Backend uses 'name' instead of 'itemName'
+  name: string;
   description: string;
-  image: string; // Backend uses 'image' instead of 'imageUrl'
+  image: string;
   price: number;
+  userId: string;
 };
 
-export default function SearchResultsPage({ query }: { query: string }) {
-  // Also get query from URL parameters
+export default function SearchResultsPage() {
   const location = useLocation();
-  const searchParams = new URLSearchParams(location.search);
-  const urlQuery = searchParams.get('q') || query;
-  const [results, setResults] = useState<Item[]>([]);
+  const queryParams = new URLSearchParams(location.search);
+  const query = queryParams.get('q') || '';
+
+  const [filteredItems, setFilteredItems] = useState<Item[]>([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const fetchResults = async () => {
-      setLoading(true);
-      try {
-        // If query is empty, get all items (for shop page)
-        const endpoint = !urlQuery || !urlQuery.trim() 
-          ? 'http://localhost:3000/api/items/allitems' 
-          : `http://localhost:3000/api/items/search?q=${encodeURIComponent(urlQuery)}`;
-          
-        const res = await axios.get<Item[]>(endpoint);
-        setResults(res.data);
-      } catch (err) {
-        console.error('Error fetching search results:', err);
-        setResults([]);
-      } finally {
-        setLoading(false);
-      }
-    };
+    if (!query.trim()) {
+      setFilteredItems([]);
+      return;
+    }
 
-    fetchResults();
-  }, [urlQuery]);
+    setLoading(true);
+    setTimeout(() => {
+      // Access the items array in the JSON
+      const results = seedData.items.filter((item) =>
+        item.name.toLowerCase().includes(query.toLowerCase())
+      );
+      setFilteredItems(results);
+      setLoading(false);
+    }, 300);
+  }, [query]);
 
   return (
-    <div className="pt-32 px-8 min-h-screen bg-[#FDF4DF]">
-      <h1 className="text-3xl font-bold mb-6">
-        {!urlQuery || !urlQuery.trim() ? "All Items" : `Search results for: "${urlQuery}"`}
-      </h1>
+    <div className="pt-6">
+      <h1 className="text-3xl font-bold mb-6">Search results for: "{query}"</h1>
       {loading ? (
         <p>Loading...</p>
-      ) : results.length === 0 ? (
-        <div className="text-center py-12">
-          <p className="text-red-500 mb-2">Unable to connect to the backend server.</p>
-          <p className="text-gray-500">Please make sure MongoDB is running and the backend server is started.</p>
-        </div>
+      ) : filteredItems.length === 0 ? (
+        <p>No items found.</p>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-          {results.map((item) => (
+          {filteredItems.map((item, index) => (
             <div
-              key={item._id}
+              key={index}
               className="bg-white rounded-lg shadow-md p-4 cursor-pointer hover:shadow-lg transition"
             >
               <img
