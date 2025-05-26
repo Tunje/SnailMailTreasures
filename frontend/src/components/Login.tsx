@@ -1,29 +1,36 @@
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import axios from "axios";
 
 const Login = () => {
   const navigate = useNavigate();
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [username, setUsername] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+
     if (!username || !password) {
       alert("Please fill in all fields");
       return;
-    } else if (username !== localStorage.getItem("username")) {
-      alert("Username not found");
-      return;
-    } else if (password !== localStorage.getItem("password")) {
-      alert("Incorrect password");
-      return;
-    } else if (
-      username === localStorage.getItem("username") &&
-      password === localStorage.getItem("password")
-    ) {
-      alert("Login successful");
     }
-    navigate("/home");
+
+    try {
+      // Send credentials to backend for verification
+      const response = await axios.post(
+        "http://localhost:5173/api/user/login",
+        { username, password }
+      );
+      if (response.data.success) {
+        alert("Login successful");
+        navigate("/home");
+      } else {
+        alert("Incorrect username or password");
+      }
+    } catch (error) {
+      alert("An error occurred during login");
+      console.error(error);
+    }
   };
 
   return (
@@ -33,7 +40,7 @@ const Login = () => {
           <h1 className="text-3xl font-bold mb-6 text-center text-[#cd8e2e]">
             Login
           </h1>
-          <form className="space-y-5">
+          <form className="space-y-5" onSubmit={handleLogin}>
             <div>
               <label className="block text-[#cd8e2e] font-semibold mb-1">
                 Username:
@@ -61,7 +68,6 @@ const Login = () => {
               />
             </div>
             <button
-              onClick={handleLogin}
               type="submit"
               className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition-colors duration-200 shadow"
             >
