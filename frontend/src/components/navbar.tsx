@@ -1,10 +1,52 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from 'react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+
+type Item = {
+  _id: string;
+  itemName: string;
+  description: string;
+  imageUrl: string;
+  price: number;
+};
 
 export default function Navbar() {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [searchResults, setSearchResults] = useState<Item[]>([]);
+  const [showResults, setShowResults] = useState(false);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
   const [activeNav, setActiveNav] = useState<string | null>(null);
-  const [cartCount, setCartCount] = useState(0);
+  const [cartCount] = useState(0);
+
+  useEffect(() => {
+    if (!searchTerm.trim()) {
+      setSearchResults([]);
+      setShowResults(false);
+      return;
+    }
+
+    const fetchResults = async () => {
+      setLoading(true);
+      try {
+        const res = await axios.get<Item[]>(
+          `http://localhost:3000/api/items/search?q=${encodeURIComponent(
+            searchTerm
+          )}`
+        );
+        setSearchResults(res.data);
+        setShowResults(true);
+      } catch (error) {
+        console.error('Search error:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    const debounce = setTimeout(fetchResults, 300);
+    return () => clearTimeout(debounce);
+  }, [searchTerm]);
 
   return (
     <nav className="fixed top-0 left-0 w-full z-50 bg-[#FDF4DF] pt-2 pb-4">

@@ -1,9 +1,8 @@
 import express, { Request, Response } from "express";
-import Item, { IItem } from "../models/item";
+import Item, { ItemDocument } from "../models/itemModel";
 
-const itemRouter = express.Router();
-
-itemRouter.get("/", async (req: Request, res: Response) => {
+// GET all items and show the user who created them
+export const getAllItems = async (req: Request, res: Response) => {
   try {
     const items = await Item.find().populate("userId", "username email");
     res.json(items);
@@ -14,9 +13,10 @@ itemRouter.get("/", async (req: Request, res: Response) => {
       res.status(500).json({ message: "An unknown error occurred" });
     }
   }
-});
+};
 
-itemRouter.get("/:id", async (req: Request, res: Response) => {
+// GET a single item by ID and show the user who created it
+export const getItemById = async (req: Request, res: Response) => {
   try {
     const items = await Item.findById(req.params.id).populate(
       "userId",
@@ -29,15 +29,17 @@ itemRouter.get("/:id", async (req: Request, res: Response) => {
       res.status(500).json({ message: "An unknown error occurred" });
     }
   }
-});
+};
 
-itemRouter.post("/", async (req: Request, res: Response) => {
+// Add a new item
+export const createItem = async (req: Request, res: Response) => {
   try {
-    const { title, description, image, price, userId } = req.body;
+    const { itemName, description, imageUrl, category, price, userId } = req.body;
     const newItem = new Item({
-      title,
+      itemName,
       description,
-      image,
+      imageUrl,
+      category,
       price,
       userId,
     });
@@ -51,15 +53,19 @@ itemRouter.post("/", async (req: Request, res: Response) => {
       res.status(500).json({ message: "An unknown error occurred" });
     }
   }
-});
+};
 
-itemRouter.put("/:id", async (req: Request, res: Response) => {
+// Update an item by ID
+export const updateItemById = async (req: Request, res: Response): Promise<any> => {
   try {
     const updateItem = await Item.findByIdAndUpdate(
       req.params.id,
       { $set: req.body },
       { new: true, runValidators: true }
     );
+    if (!updateItem) {
+      return res.status(404).json({ message: "Item not found" });
+    }
     res.json(updateItem);
   } catch (error) {
     if (error instanceof Error) {
@@ -68,13 +74,18 @@ itemRouter.put("/:id", async (req: Request, res: Response) => {
       res.status(500).json({ message: "An unknown error occurred" });
     }
   }
-});
+};
 
-itemRouter.delete("/:id", async (req: Request, res: Response) => {
+// Delete an item
+export const deleteItem = async (req: Request, res: Response): Promise<any> => {
   try {
-    const deleteItem = await Item.findByIdAndDelete(req.params.id);
+    const deletedItem = await Item.findByIdAndDelete(req.params.id);
 
-    res.json({ message: "Item deleted" });
+    if (!deletedItem) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json({ message: `Item by name '${deletedItem.itemName}' with ID (ID: ${deletedItem._id}) was successfully deleted.`});
   } catch (error) {
     if (error instanceof Error) {
       res.status(500).json({ message: error.message });
@@ -82,6 +93,4 @@ itemRouter.delete("/:id", async (req: Request, res: Response) => {
       res.status(500).json({ message: "An unknown error occurred" });
     }
   }
-});
-
-export default itemRouter;
+};
