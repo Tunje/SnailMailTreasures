@@ -6,12 +6,13 @@ import mongoose from "mongoose";
 import cors from "cors";
 import userRouter from "./server/routes/userRoutes";
 import itemRouter from "./server/routes/itemRoutes";
+import authRouter from "./server/routes/authRoutes";
 
 const app = express();
 const PORT = process.env.PORT || 3000; // Default port is 5000, backup port is 3000
 
 // Middleware
-app.use(cors({ origin: "http://localhost:3000" })); // Allow requests from the React frontend
+app.use(cors({ origin: "http://localhost:5173" })); // Allow requests from the React frontend
 app.use(express.json());
 
 // MongoDB connection
@@ -30,6 +31,7 @@ mongoose.connection.on("error", (err) =>
 );
 
 // Routes
+app.use("/api/auth", authRouter); // All routes begin with /api/auth
 app.use("/api/users", userRouter); // All routes begin with /api/users
 app.use("/api/items", itemRouter); // All routes begin with /api/items
 
