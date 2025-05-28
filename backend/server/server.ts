@@ -1,6 +1,7 @@
 import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
+import authRouter from "./routes/authRoutes";
 import userRouter from "./routes/userRoutes";
 import itemRouter from "./routes/itemRoutes";
 
