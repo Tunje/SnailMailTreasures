@@ -1,7 +1,7 @@
 // src/pages/SearchResultsPage.tsx
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import axios from 'axios';
+import { getAllItems, searchItems } from '../services/itemService';
 
 type Item = {
   _id: string;
@@ -24,12 +24,14 @@ export default function SearchResultsPage({ query }: { query: string }) {
       setLoading(true);
       try {
         // If query is empty, get all items (for shop page)
-        const endpoint = !urlQuery || !urlQuery.trim() 
-          ? 'http://localhost:3000/api/items/allitems' 
-          : `http://localhost:3000/api/items/search?q=${encodeURIComponent(urlQuery)}`;
-          
-        const res = await axios.get<Item[]>(endpoint);
-        setResults(res.data);
+        let items;
+        if (!urlQuery || !urlQuery.trim()) {
+          items = await getAllItems();
+        } else {
+          items = await searchItems(urlQuery);
+        }
+        
+        setResults(items);
       } catch (err) {
         console.error('Error fetching search results:', err);
         setResults([]);

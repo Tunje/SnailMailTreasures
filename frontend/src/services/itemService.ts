@@ -19,7 +19,7 @@ export const getAllItems = async (): Promise<Item[]> => {
 
 // Get item by ID
 export const getItemById = async (id: string): Promise<Item> => {
-  const response = await api.get(`/items/${id}`);
+  const response = await api.get(`/items/item/${id}`);
   return response.data;
 };
 
@@ -32,18 +32,24 @@ export const getItemsByUserId = async (userId: string): Promise<Item[]> => {
 
 // Create a new item
 export const createItem = async (itemData: Omit<Item, '_id' | 'createdAt'>): Promise<Item> => {
-  const response = await api.post('/items', itemData);
+  const response = await api.post('/items/createitem', itemData);
   return response.data;
 };
 
 // Update item
 export const updateItem = async (id: string, itemData: Partial<Item>): Promise<Item> => {
-  const response = await api.put(`/items/${id}`, itemData);
+  const response = await api.put(`/items/updateitem/${id}`, itemData);
   return response.data;
 };
 
 // Delete item
 export const deleteItem = async (id: string): Promise<{ message: string }> => {
-  const response = await api.delete(`/items/${id}`);
+  const response = await api.delete(`/items/deleteitem/${id}`);
+  return response.data;
+};
+
+// Search items
+export const searchItems = async (query: string): Promise<Item[]> => {
+  const response = await api.get(`/items/search?q=${encodeURIComponent(query)}`);
   return response.data;
 };
