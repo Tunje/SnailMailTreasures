@@ -4,28 +4,27 @@ import axios from "axios";
 
 const Login = () => {
   const navigate = useNavigate();
-  const [username, setUsername] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!username || !password) {
+    if (!email || !password) {
       alert("Please fill in all fields");
       return;
     }
 
     try {
       // Send credentials to backend for verification
-      const response = await axios.post(
-        "http://localhost:5173/api/user/login",
-        { username, password }
-      );
+      const url = `${import.meta.env.VITE_API_BASE_URL}/auth/login`;
+      console.log("Login URL:", url);
+      const response = await axios.post(url, { email, password });
       if (response.data.success) {
         alert("Login successful");
         navigate("/home");
       } else {
-        alert("Incorrect username or password");
+        alert("Incorrect email or password");
       }
     } catch (error) {
       alert("An error occurred during login");
@@ -43,14 +42,14 @@ const Login = () => {
           <form className="space-y-5" onSubmit={handleLogin}>
             <div>
               <label className="block text-[#cd8e2e] font-semibold mb-1">
-                Username:
+                email:
               </label>
               <input
                 type="text"
-                name="username"
+                name="email"
                 required
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 className="w-full px-4 py-2 border border-blue-200 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
               />
             </div>

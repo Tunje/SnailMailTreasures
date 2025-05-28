@@ -32,7 +32,7 @@ const Registration = () => {
   };
 
   return (
-    <div>
+    <div className="mt-96">
       <h1>Registration</h1>
       <form onSubmit={(e) => storeUser(e)}>
         <div>
