@@ -6,11 +6,11 @@ export interface AuthRequest extends Request {
     user?: UserDocument;
 }
 
-export const authMiddleware = async (
+export const protect = async (
     req: AuthRequest,
     res: Response,
     next: NextFunction
-) => {
+): Promise<any> => {
     let token;
 
     const authHeader = req.headers.authorization;
