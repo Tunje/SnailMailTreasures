@@ -1,15 +1,9 @@
 // src/pages/SearchResultsPage.tsx
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { getAllItems, searchItems } from '../services/itemService';
+import { getAllItems, searchItems, Item } from '../services/itemService';
 
-type Item = {
-  _id: string;
-  name: string; // Backend uses 'name' instead of 'itemName'
-  description: string;
-  image: string; // Backend uses 'image' instead of 'imageUrl'
-  price: number;
-};
+// Using Item type imported from itemService
 
 export default function SearchResultsPage({ query }: { query: string }) {
   // Also get query from URL parameters
@@ -52,8 +46,7 @@ export default function SearchResultsPage({ query }: { query: string }) {
         <p>Loading...</p>
       ) : results.length === 0 ? (
         <div className="text-center py-12">
-          <p className="text-red-500 mb-2">Unable to connect to the backend server.</p>
-          <p className="text-gray-500">Please make sure MongoDB is running and the backend server is started.</p>
+          <p className="text-gray-500">No items found matching your search.</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
@@ -62,12 +55,11 @@ export default function SearchResultsPage({ query }: { query: string }) {
               key={item._id}
               className="bg-white rounded-lg shadow-md p-4 cursor-pointer hover:shadow-lg transition"
             >
-              <img
-                src={item.image}
-                alt={item.name}
-                className="w-full h-48 object-cover rounded-md mb-2"
-              />
-              <h2 className="text-xl font-semibold">{item.name}</h2>
+              <div 
+                className="h-48 bg-cover bg-center" 
+                style={{ backgroundImage: `url(${item.imageUrl || item.image})` }}
+              ></div>
+              <h2 className="text-xl font-semibold text-[var(--color-primary)] mt-2">{item.itemName || item.name}</h2>
               <p className="text-gray-600 truncate">{item.description}</p>
               <p className="text-[#CB8427] font-bold mt-1">
                 ${item.price.toFixed(2)}
