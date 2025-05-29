@@ -1,4 +1,3 @@
-import { useEffect } from 'react'
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import "./index.css";
 import Navbar from "./components/navbar";
@@ -8,14 +7,7 @@ import Login from './components/Login'
 import Registration from './components/Registration'
 import SearchResultsPage from './pages/SearchResultsPage'
 import UserPage from './components/UserPage'
-import seedService from './services/seedService'
 function App() {
-  // Seed service initialization disabled
-  // useEffect(() => {
-  //   seedService.initialize()
-  //     .then(() => console.log('Database initialization complete'))
-  //     .catch(error => console.error('Failed to initialize database:', error))
-  // }, [])
 
   return (
     <Router>
