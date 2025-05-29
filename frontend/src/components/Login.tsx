@@ -20,7 +20,10 @@ const Login = () => {
       const url = `${import.meta.env.VITE_API_BASE_URL}/auth/login`;
       console.log("Login URL:", url);
       const response = await axios.post(url, { email, password });
-      if (response.data.success) {
+      const { data } = response;
+      localStorage.setItem("token", data.token);
+
+      if (response.status === 200) {
         alert("Login successful");
         navigate("/home");
       } else {

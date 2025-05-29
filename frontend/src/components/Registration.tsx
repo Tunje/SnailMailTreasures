@@ -24,7 +24,7 @@ const Registration = () => {
     }
 
     try {
-      await createUser({ username, email });
+      await createUser({ username, email, password });
       alert("User registered successfully");
     } catch (err) {
       console.error("Error fetching user data:", err);
