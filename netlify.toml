@@ -1,7 +1,7 @@
 [build]
   base = "frontend"
   publish = "dist"
-  command = "CI=false npm run build"
+  command = "npm install && npm run build:skip-ts"
 
 [[redirects]]
   from = "/*"

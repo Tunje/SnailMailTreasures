@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const PlaceholderFooter: React.FC = () => {
   return (
@@ -12,9 +13,12 @@ const PlaceholderFooter: React.FC = () => {
           <div className="footer-section">
             <h3>Quick Links</h3>
             <ul>
-              <li><a href="/">Home</a></li>
-              <li><a href="/items">Browse Items</a></li>
-              <li><a href="/user">My Account</a></li>
+              <li><Link to="/home" className="hover:text-[#CB8427] transition-colors">Home</Link></li>
+              <li><Link to="/shop" className="hover:text-[#CB8427] transition-colors">Shop</Link></li>
+              <li><Link to="/deals" className="hover:text-[#CB8427] transition-colors">Deals</Link></li>
+              <li><Link to="/favorites" className="hover:text-[#CB8427] transition-colors">Favorites</Link></li>
+              <li><Link to="/login" className="hover:text-[#CB8427] transition-colors">Login</Link></li>
+              <li><Link to="/cart" className="hover:text-[#CB8427] transition-colors">Cart</Link></li>
             </ul>
           </div>
           <div className="footer-section">

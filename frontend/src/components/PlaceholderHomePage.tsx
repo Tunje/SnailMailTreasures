@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { getAllItems } from '../services/itemService';
 import { Item } from '../services/itemService';
 
 const PlaceholderHomePage: React.FC = () => {
+  const navigate = useNavigate();
   const [featuredItems, setFeaturedItems] = useState<Item[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -30,7 +32,10 @@ const PlaceholderHomePage: React.FC = () => {
         <div className="max-w-3xl mx-auto px-6">
           <h1 className="text-4xl md:text-5xl font-bold text-[var(--color-primary)] mb-4">Welcome to SnailMail Treasures</h1>
           <p className="text-xl text-gray-700 mb-8">Discover unique collectibles and treasures from around the world</p>
-          <button className="btn-primary rounded-full py-3 px-8 transform hover:scale-105">
+          <button 
+            className="btn-primary rounded-full py-3 px-8 transform hover:scale-105"
+            onClick={() => navigate('/shop')}
+          >
             Browse Items
           </button>
         </div>
