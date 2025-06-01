@@ -256,6 +256,7 @@ const userRouter = express.Router();
  *                   type: string
  *                   example: "An unknown error occurred"
  */
+
 userRouter.get("/allusers", getAllUsers);
 userRouter.get("/user/:id", getUserById);
 userRouter.get("/user/:userName", getUserByUsername);
