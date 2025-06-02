@@ -6,7 +6,6 @@ import {
   updateItemById, 
   deleteItem 
 } from "../controllers/itemController";
-import Item from '../models/itemModel';
 
 const itemRouter = express.Router();
 
@@ -24,37 +23,7 @@ const itemRouter = express.Router();
  *               schema:
  *                 type: array
  *                 items:
- *                   type: object
- *                   properties:
- *                     _id:
- *                       type: string
- *                       example: "507f1f77bcf86cd799439011"
- *                     itemName:
- *                       type: string
- *                       example: "Vintage Camera"
- *                     description:
- *                       type: string
- *                       example: "A classic camera from the 1960s"
- *                     imageUrl:
- *                       type: string
- *                       example: "http://example.com/image.jpg"
- *                     category:
- *                       type: string
- *                       example: "Photography"
- *                     price:
- *                       type: number
- *                       example: 150.00
- *                     userId:
- *                       type: string
- *                       example: "507f1f77bcf86cd799439012"
- *                     createdAt:
- *                       type: string
- *                       format: date-time
- *                       example: "2023-10-01T12:00:00Z"
- *                     updatedAt:
- *                       type: string
- *                       format: date-time
- *                       example: "2023-10-01T12:00:00Z"
+ *                   $ref: '#/components/schemas/Item'
  *         500:
  *           description: Internal server error
  *           content:
@@ -86,37 +55,7 @@ const itemRouter = express.Router();
  *           content:
  *             application/json:
  *               schema:
- *                 type: object
- *                 properties:
- *                   _id:
- *                     type: string
- *                     example: "507f1f77bcf86cd799439011"
- *                   itemName:
- *                     type: string
- *                     example: "Vintage Camera"
- *                   description:
- *                     type: string
- *                     example: "A classic camera from the 1960s"
- *                   imageUrl:
- *                     type: string
- *                     example: "http://example.com/image.jpg"
- *                   category:
- *                     type: string
- *                     example: "Photography"
- *                   price:
- *                     type: number
- *                     example: 150.00
- *                   userId:
- *                     type: string
- *                     example: "507f1f77bcf86cd799439012"
- *                   createdAt:
- *                     type: string
- *                     format: date-time
- *                     example: "2023-10-01T12:00:00Z"
- *                   updatedAt:
- *                     type: string
- *                     format: date-time
- *                     example: "2023-10-01T12:00:00Z"
+ *                $ref: '#/components/schemas/Item'
  *         404:
  *           description: Item not found
  *           content:
@@ -150,70 +89,14 @@ const itemRouter = express.Router();
  *       content:
  *         application/json:
  *          schema:
- *            type: object
- *            required:
- *              - itemName
- *              - description
- *              - imageUrl
- *              - category
- *              - price
- *              - userId
- *            properties:
- *              itemName:
- *                type: string
- *                example: "Vintage Camera"
- *              description:
- *                type: string
- *                example: "A classic camera from the 1960s"
- *              imageUrl:
- *                type: string
- *                example: "http://example.com/image.jpg"
- *              category:
- *                type: string
- *                example: "Photography"
- *              price:
- *                type: number
- *                example: 150.00
- *              userId:
- *                type: string
- *                example: "507f1f77bcf86cd799439012"
+ *           $ref: '#/components/schemas/CreateItem'  
  *     responses:
  *       201:
  *         description: Item created successfully
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 _id:
- *                   type: string
- *                   example: "507f1f77bcf86cd799439011"
- *                 itemName:
- *                   type: string
- *                   example: "Vintage Camera"
- *                 description:
- *                   type: string
- *                   example: "A classic camera from the 1960s"
- *                 imageUrl:
- *                   type: string
- *                   example: "http://example.com/image.jpg"
- *                 category:
- *                   type: string
- *                   example: "Photography"
- *                 price:
- *                   type: number
- *                   example: 150.00
- *                 userId:
- *                   type: string
- *                   example: "507f1f77bcf86cd799439012"
- *                 createdAt:
- *                   type: string
- *                   format: date-time
- *                   example: "2023-10-01T12:00:00Z"
- *                 updatedAt:
- *                   type: string
- *                   format: date-time
- *                   example: "2023-10-01T12:00:00Z"
+ *               $ref: '#/components/schemas/Item'
  *       400:
  *        description: Bad request, missing required fields
  *        content:
@@ -254,60 +137,14 @@ const itemRouter = express.Router();
  *       content:
  *         application/json:
  *          schema:
- *            type: object
- *            properties:
- *              itemName:
- *                type: string
- *                example: "Vintage Camera Updated"
- *              description:
- *                type: string
- *                example: "An updated description for the vintage camera"
- *              imageUrl:
- *                type: string
- *                example: "http://example.com/updated_image.jpg"
- *              category:
- *                type: string
- *                example: "Photography Updated"
- *              price:
- *                type: number
- *                example: 175.00
+ *            $ref: '#/components/schemas/UpdateItem'
  *     responses:
  *       200:
  *         description: Item updated successfully
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 _id:
- *                   type: string
- *                   example: "507f1f77bcf86cd799439011"
- *                 itemName:
- *                   type: string
- *                   example: "Vintage Camera Updated"
- *                 description:
- *                   type: string
- *                   example: "An updated description for the vintage camera"
- *                 imageUrl:
- *                   type: string
- *                   example: "http://example.com/updated_image.jpg"
- *                 category:
- *                   type: string
- *                   example: "Photography Updated"
- *                 price:
- *                   type: number
- *                   example: 175.00
- *                 userId:
- *                   type: string
- *                   example: "507f1f77bcf86cd799439012"
- *                 createdAt:
- *                   type: string
- *                   format: date-time
- *                   example: "2023-10-01T12:00:00Z"
- *                 updatedAt:
- *                   type: string
- *                   format: date-time
- *                   example: "2023-10-01T12:00:00Z"
+ *               $ref: '#/components/schemas/Item'
  *       404:
  *         description: Item not found
  *         content:
