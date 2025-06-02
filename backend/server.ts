@@ -12,7 +12,8 @@ const PORT = 3000;
 // Middleware
 const allowedOrigins = [
   "http://localhost:5173", // React frontend
-  "https://snailmailtreaures.netlify.app" // Netlify frontend
+  "https://snailmailtreasures.netlify.app", // Netlify frontend
+  "https://snailmailtreasures.onrender.com" // Render backend
 ];
 
 app.use(cors({ 
