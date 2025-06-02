@@ -1,10 +1,10 @@
 import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
-import userRouter from "./routes/userRoutes";
-import itemRouter from "./routes/itemRoutes";
+import userRouter from "./server/routes/userRoutes";
+import itemRouter from "./server/routes/itemRoutes";
 import swaggerUi from "swagger-ui-express";
-import swaggerSpec from "./swagger/swaggerConfig";
+import swaggerSpec from "./server/swagger/swaggerConfig";
 
 const app = express();
 const PORT = 3000;
