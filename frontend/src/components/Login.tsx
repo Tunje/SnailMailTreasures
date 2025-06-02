@@ -18,7 +18,7 @@ const Login = () => {
     try {
       // Send credentials to backend for verification
       const baseUrl = import.meta.env.VITE_API_BASE_URL || 'https://snailmailtreasures.onrender.com/api';
-      const url = `${baseUrl}/api/auth/login`;
+      const url = `${baseUrl}/auth/login`;
       console.log("Login URL:", url);
       const response = await axios.post(url, { email, password });
       const { data } = response;
