@@ -1,5 +1,6 @@
-import express, { Request, Response } from "express";
+import express, { NextFunction, Request, Response } from "express";
 import Item, { ItemDocument } from "../models/itemModel";
+import { AuthRequest } from "../middleware/authMiddleware";
 
 // GET all items and show the user who created them
 export const getAllItems = async (req: Request, res: Response) => {
@@ -32,7 +33,7 @@ export const getItemById = async (req: Request, res: Response) => {
 };
 
 // Add a new item
-export const createItem = async (req: Request, res: Response) => {
+export const createItem = async (req: AuthRequest, res: Response) => {
   try {
     const { itemName, description, imageUrl, category, price, userId } = req.body;
     const newItem = new Item({
@@ -56,7 +57,7 @@ export const createItem = async (req: Request, res: Response) => {
 };
 
 // Update an item by ID
-export const updateItemById = async (req: Request, res: Response): Promise<any> => {
+export const updateItemById = async (req: AuthRequest, res: Response): Promise<any> => {
   try {
     const updateItem = await Item.findByIdAndUpdate(
       req.params.id,
@@ -77,7 +78,7 @@ export const updateItemById = async (req: Request, res: Response): Promise<any> 
 };
 
 // Delete an item
-export const deleteItem = async (req: Request, res: Response): Promise<any> => {
+export const deleteItem = async (req: AuthRequest, res: Response): Promise<any> => {
   try {
     const deletedItem = await Item.findByIdAndDelete(req.params.id);
 
