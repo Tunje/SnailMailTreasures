@@ -1,7 +1,18 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { getAllItems } from '../services/itemService';
 import { Item } from '../services/itemService';
+
+// Convert gs:// Firebase Storage URL to public HTTP URL
+function firebaseGsToHttpUrl(gsUrl: string): string {
+  // gs://snailmailtreasures.firebasestorage.app/filename.jpg
+  const match = gsUrl.match(/^gs:\/\/snailmailtreasures\.firebasestorage\.app\/(.+)$/);
+  if (!match) return gsUrl;
+  const filename = encodeURIComponent(match[1]);
+  return `https://firebasestorage.googleapis.com/v0/b/snailmailtreasures.firebasestorage.app/o/${filename}?alt=media`;
+}
+
 
 const PlaceholderHomePage: React.FC = () => {
   const navigate = useNavigate();
@@ -54,20 +65,22 @@ const PlaceholderHomePage: React.FC = () => {
           ) : (
             featuredItems.map((item) => (
               <div className="card" key={item._id}>
-                <div 
-                  className="h-48 bg-cover bg-center" 
-                  style={{ backgroundImage: `url(${item.image})` }}
-                ></div>
-                <div className="p-6">
-                  <h3 className="text-xl font-semibold mb-2 text-[var(--color-primary)]">{item.name}</h3>
-                  <p className="text-gray-600 mb-4">{item.description.length > 100 ? `${item.description.substring(0, 100)}...` : item.description}</p>
-                  <div className="flex justify-between items-center">
-                    <span className="text-xl font-bold text-[var(--color-primary)]">${item.price.toFixed(2)}</span>
-                    <button className="btn-primary">
-                      View Details
-                    </button>
+                <Link to={`/item/${item._id}`} style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}>
+                  <div 
+                    className="h-48 bg-cover bg-center" 
+                    style={{ backgroundImage: `url(${item.imageUrl ? firebaseGsToHttpUrl(item.imageUrl) : item.image})` }}
+                  ></div>
+                  <div className="p-6">
+                    <h3 className="text-xl font-semibold mb-2 text-[var(--color-primary)]">{item.name}</h3>
+                    <p className="text-gray-600 mb-4">{item.description.length > 100 ? `${item.description.substring(0, 100)}...` : item.description}</p>
+                    <div className="flex justify-between items-center">
+                      <span className="text-xl font-bold text-[var(--color-primary)]">${item.price.toFixed(2)}</span>
+                      <button className="btn-primary">
+                        View Details
+                      </button>
+                    </div>
                   </div>
-                </div>
+                </Link>
               </div>
             ))
           )}

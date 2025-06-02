@@ -2,6 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { getAllUsers } from '../services/userService';
 import { getAllItems } from '../services/itemService';
 
+// Convert gs:// Firebase Storage URL to public HTTP URL
+function firebaseGsToHttpUrl(gsUrl: string): string {
+  // gs://snailmailtreasures.firebasestorage.app/filename.jpg
+  const match = gsUrl.match(/^gs:\/\/snailmailtreasures\.firebasestorage\.app\/(.+)$/);
+  if (!match) return gsUrl;
+  const filename = encodeURIComponent(match[1]);
+  return `https://firebasestorage.googleapis.com/v0/b/snailmailtreasures.firebasestorage.app/o/${filename}?alt=media`;
+}
+
+
 interface ConsoleData {
   users: any[];
   items: any[];
@@ -101,6 +111,7 @@ const ConsolePage: React.FC = () => {
               <thead>
                 <tr>
                   <th>ID</th>
+                  <th>Image</th>
                   <th>Name</th>
                   <th>Description</th>
                   <th>Price</th>
@@ -114,6 +125,11 @@ const ConsolePage: React.FC = () => {
                   return (
                     <tr key={item._id}>
                       <td>{item._id}</td>
+                      <td>{item.imageUrl ? (
+                        <img src={firebaseGsToHttpUrl(item.imageUrl)} alt={item.name} style={{width:'60px',height:'60px',objectFit:'cover',borderRadius:'8px'}} />
+                      ) : (
+                        item.image ? <img src={item.image} alt={item.name} style={{width:'60px',height:'60px',objectFit:'cover',borderRadius:'8px'}} /> : <span>No Image</span>
+                      )}</td>
                       <td>{item.name}</td>
                       <td className="description-cell">{item.description.substring(0, 50)}...</td>
                       <td>${item.price.toFixed(2)}</td>
