@@ -1,0 +1,1 @@
+This week I finished the functionality for the login/register. Together with Peter and Simon we where able to connect the frontend and backend together. There where some trial and error but we managed to get it to work. The thing that is left to do is to add some styling. And maybe add an alert that will display with a message "user welcome back!"
