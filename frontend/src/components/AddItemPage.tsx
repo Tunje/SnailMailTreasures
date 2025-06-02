@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createItem as createItemAPI } from '../services/itemService';
-import { User } from '../services/userService';
 
 const AddItemPage: React.FC = () => {
   const [newItem, setNewItem] = useState({
