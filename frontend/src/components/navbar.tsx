@@ -81,7 +81,12 @@ export default function Navbar() {
             }`}
             onClick={() => {
               setActiveNav("user");
-              navigate("/user");
+              const token = localStorage.getItem("token");
+              if (!token) {
+                navigate("/login");
+              } else {
+                navigate("/user");
+              }
               setTimeout(() => setActiveNav(null), 500);
             }}
           >

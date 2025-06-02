@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { User, getUserByUsername } from '../services/userService';
+import { Link } from 'react-router-dom';
+import { User, getUserById } from '../services/userService';
 import { Item, getItemsByUserId } from '../services/itemService';
 
 const UserPage: React.FC = () => {
@@ -7,6 +8,7 @@ const UserPage: React.FC = () => {
   const [userItems, setUserItems] = useState<Item[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+
   
   // Fetch real user data from the backend
   useEffect(() => {
@@ -14,15 +16,32 @@ const UserPage: React.FC = () => {
       try {
         setLoading(true);
         
-        // For demonstration purposes, we'll use a hardcoded username from our seed data
-        // In a real app, this would come from authentication or route params
-        const username = 'vintage_lover';
-        
+        // Get JWT token from localStorage
+        const token = localStorage.getItem('token');
+        if (!token) {
+          setError('No token found. Please log in.');
+          setLoading(false);
+          return;
+        }
+        // Decode JWT to get user id
+        function parseJwt (token: string) {
+          try {
+            return JSON.parse(atob(token.split('.')[1]));
+          } catch (e) {
+            return null;
+          }
+        }
+        const payload = parseJwt(token);
+        if (!payload || !payload.id) {
+          setError('Invalid token. Please log in again.');
+          setLoading(false);
+          return;
+        }
+        const userId = payload.id;
         try {
-          // Fetch user data
-          const userData = await getUserByUsername(username);
+          // Fetch user data by ID
+          const userData = await getUserById(userId);
           setUser(userData);
-          
           // Fetch user's items
           if (userData && userData._id) {
             const userItems = await getItemsByUserId(userData._id);
@@ -116,8 +135,10 @@ const UserPage: React.FC = () => {
           </div>
         )}
         <div className="mt-8 text-center">
-          <button className="btn-primary">+ Add New Item</button>
+          <Link className="btn-primary" to="/add-item">+ Add New Item</Link>
         </div>
+
+
       </section>
     </div>
   );

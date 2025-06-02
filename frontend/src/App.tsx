@@ -7,6 +7,7 @@ import Login from './components/Login'
 import Registration from './components/Registration'
 import SearchResultsPage from './pages/SearchResultsPage'
 import UserPage from './components/UserPage'
+import AddItemPage from './components/AddItemPage'
 function App() {
 
   return (
@@ -25,6 +26,7 @@ function App() {
             <Route path="/favorites" element={<PlaceholderHomePage />} />
             <Route path="/cart" element={<PlaceholderHomePage />} />
             <Route path="/user" element={<UserPage />} />
+            <Route path="/add-item" element={<AddItemPage />} />
           </Routes>
         </main>
 
