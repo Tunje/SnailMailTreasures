@@ -2,7 +2,7 @@ import api from "./api";
 
 export interface User {
   _id: string;
-  username: string;
+  userName: string;
   email: string;
 }
 
@@ -21,27 +21,37 @@ export const getUserById = async (id: string): Promise<User> => {
 };
 
 // Get user by username
-export const getUserByUsername = async (username: string): Promise<User> => {
-  const response = await api.get(`/users/user/${username}`);
-  return response.data;
+export const getUserByUsername = async (userName: string): Promise<User> => {
+  try {
+    // First try to get all users
+    const response = await api.get('/users/allusers');
+    // Then filter by username
+    const user = response.data.find((user: User) => user.userName === userName);
+    
+    if (!user) {
+      throw new Error(`User with username ${userName} not found`);
+    }
+    
+    return user;
+  } catch (error) {
+    console.error('Error fetching user by username:', error);
+    throw error;
+  }
 };
 
 // Create a new user
 export const createUser = async (userData: {
-  username: string;
+  userName: string;
   email: string;
   password: string;
 }): Promise<User> => {
-  // Convert username to userName to match backend expectations
   const formattedData = {
-    userName: userData.username,
+    userName: userData.userName,
     email: userData.email,
-    // Add a default password for registration
     password: userData.password,
   };
 
   try {
-    // Use the auth/register endpoint instead of users/adduser
     const response = await api.post("/auth/register", formattedData);
     return response.data;
   } catch (error) {
@@ -49,7 +59,7 @@ export const createUser = async (userData: {
     // If registration fails, try to proceed with a mock user
     return {
       _id: `mock_${Date.now()}`,
-      username: userData.username,
+      userName: userData.userName,
       email: userData.email,
     };
   }

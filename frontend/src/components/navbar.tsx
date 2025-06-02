@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { getCartItemCount } from '../services/cartService';
 
 export default function Navbar() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -7,7 +8,44 @@ export default function Navbar() {
   const navigate = useNavigate();
 
   const [activeNav, setActiveNav] = useState<string | null>(null);
-  const [cartCount] = useState(0);
+  const [cartCount, setCartCount] = useState(0);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  
+  // Check if user is logged in and update cart count
+  useEffect(() => {
+    const checkLoginStatus = () => {
+      const token = localStorage.getItem('token');
+      setIsLoggedIn(!!token);
+    };
+    
+    const updateCartCount = () => {
+      const count = getCartItemCount();
+      setCartCount(count);
+    };
+    
+    checkLoginStatus();
+    updateCartCount();
+    
+    // Add event listeners for storage changes
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'token') {
+        checkLoginStatus();
+      }
+      if (e.key === 'snailmail_cart') {
+        updateCartCount();
+      }
+    };
+    
+    window.addEventListener('storage', handleStorageChange);
+    
+    // Set up interval to periodically check cart count (in case it's updated in another component)
+    const intervalId = setInterval(updateCartCount, 1000);
+    
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      clearInterval(intervalId);
+    };
+  }, []);
 
   // We don't need to fetch search results here as we're navigating to the search page
 
@@ -61,15 +99,25 @@ export default function Navbar() {
             ${
               activeNav === "login"
                 ? "bg-blue-400 text-white scale-105"
-                : "bg-gray-200 hover:bg-gray-300 hover:scale-105 active:scale-95"
+                : isLoggedIn 
+                  ? "bg-red-500 text-white hover:bg-red-600 hover:scale-105 active:scale-95"
+                  : "bg-gray-200 hover:bg-gray-300 hover:scale-105 active:scale-95"
             }`}
             onClick={() => {
               setActiveNav("login");
-              navigate("/login");
+              if (isLoggedIn) {
+                // Logout functionality
+                localStorage.removeItem('token');
+                setIsLoggedIn(false);
+                navigate('/');
+              } else {
+                // Login functionality
+                navigate('/login');
+              }
               setTimeout(() => setActiveNav(null), 500);
             }}
           >
-            login
+            {isLoggedIn ? 'logout' : 'login'}
           </button>
 
           <button
@@ -81,7 +129,12 @@ export default function Navbar() {
             }`}
             onClick={() => {
               setActiveNav("user");
-              navigate("/user");
+              const token = localStorage.getItem("token");
+              if (!token) {
+                navigate("/login");
+              } else {
+                navigate("/user");
+              }
               setTimeout(() => setActiveNav(null), 500);
             }}
           >
@@ -105,9 +158,11 @@ export default function Navbar() {
               cart
             </button>
 
-            <div className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">
-              {cartCount}
-            </div>
+            {cartCount > 0 && (
+              <div className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">
+                {cartCount}
+              </div>
+            )}
           </div>
         </div>
       </div>

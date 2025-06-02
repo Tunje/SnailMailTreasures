@@ -12,7 +12,24 @@ const app = express();
 const PORT = process.env.PORT || 3000; // Default port is 5000, backup port is 3000
 
 // Middleware
-app.use(cors({ origin: "http://localhost:5173" })); // Allow requests from the React frontend
+const allowedOrigins = [
+  "http://localhost:5173", // React frontend
+  "https://snailmailtreaures.netlify.app" // Netlify frontend
+];
+
+app.use(cors({ 
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or Postman)
+    if (!origin) return callback(null, true);
+
+    // Check if the origin is in the allowed list 
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    } else {
+      return callback(new Error("Not allowed by CORS"));
+    }
+  }
+}));
 app.use(express.json());
 
 // MongoDB connection

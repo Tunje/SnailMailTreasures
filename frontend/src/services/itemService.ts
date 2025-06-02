@@ -11,6 +11,7 @@ export interface Item {
   price: number;
   userId: string;
   createdAt: string;
+  category?: string;  // Optional category field
 }
 
 // Get all items
@@ -24,10 +25,52 @@ export const getAllItems = async (): Promise<Item[]> => {
   }));
 };
 
-// Get item by ID
+// Get item by ID (client-side filtering to avoid CORS issues)
 export const getItemById = async (id: string): Promise<Item> => {
-  const response = await api.get(`/items/item/${id}`);
-  return response.data;
+  try {
+    console.log('itemService: Starting to fetch all items');
+    const startTime = Date.now();
+    
+    // Try to use a cached version of allItems if we've fetched them recently
+    let response;
+    try {
+      console.log('itemService: Fetching all items from API');
+      response = await api.get('/items/allitems');
+      console.log(`itemService: All items fetched in ${Date.now() - startTime}ms`);
+    } catch (apiError) {
+      console.error('itemService: API error fetching all items:', apiError);
+      throw new Error('Failed to fetch items from server');
+    }
+    
+    if (!response.data) {
+      console.error('itemService: No data returned from API');
+      throw new Error('No data returned from server');
+    }
+    
+    console.log(`itemService: Searching for item with ID ${id} among ${response.data.length} items`);
+    const allItems = response.data;
+    const item = allItems.find((item: any) => item._id === id);
+    
+    if (!item) {
+      console.error(`itemService: Item with ID ${id} not found in ${allItems.length} items`);
+      throw new Error(`Item with ID ${id} not found`);
+    }
+    
+    console.log('itemService: Item found:', item);
+    
+    // Map backend field names to frontend field names
+    const mappedItem = {
+      ...item,
+      name: item.name || item.itemName,
+      image: item.image || item.imageUrl
+    };
+    
+    console.log('itemService: Returning mapped item:', mappedItem);
+    return mappedItem;
+  } catch (error) {
+    console.error('itemService: Error in getItemById:', error);
+    throw error;
+  }
 };
 
 // Get items by user ID
