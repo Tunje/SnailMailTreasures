@@ -54,28 +54,28 @@ const userRouter = express.Router();
  *           description: User found
  *           content: 
  *             application/json:
- *              schema:
- *               $ref: '#/components/schemas/User'
+ *               schema:
+ *                 $ref: '#/components/schemas/User'
  *         404:
  *           description: User not found
  *           content:
  *             application/json:
- *              schema:
- *                type: object
- *                properties:
- *                  message:
- *                    type: string
- *                    example: "User not found"
+ *               schema:
+ *                 type: object
+ *                 properties:
+ *                   message:
+ *                     type: string
+ *                     example: "User not found"
  *         500:
  *           description: Server error
  *           content:
  *             application/json:
- *              schema:
- *                type: object
- *                properties:
- *                  message:
- *                    type: string
- *                    example: "An unknown error occurred"
+ *               schema:
+ *                 type: object
+ *                 properties:
+ *                   message:
+ *                     type: string
+ *                     example: "An unknown error occurred"
  */
 
 /**
