@@ -144,6 +144,44 @@ const options = {
             },
           },
         },
+        // Optional schema for creating an item
+        CreateItem: {
+          type: "object",
+          required: ["itemName", "description", "imageUrl", "category", "price", "userId"],
+          properties: {
+            itemName: {
+              type: "string",
+              example: "Vintage Camera",
+              description: "Name of the item",
+            },
+            description: {
+              type: "string",
+              example: "A classic camera from the 1960s",
+              description: "Detailed description of the item",
+            },
+            imageUrl: {
+              type: "string",
+              example: "http://example.com/image.jpg",
+              description: "URL of the item's image",
+            },
+            category: {
+              type: "string",
+              example: "Photography",
+              description: "Category this item belongs to",
+            },
+            price: {
+              type: "number",
+              example: 150.00,
+              description: "Price of the item",
+            },
+            userId: {
+              type: "string",
+              example: "507f1f77bcf86cd799439012",
+              description: "ID of the user who owns the item",
+            },
+          },
+        },
+
       },
     },
   },
