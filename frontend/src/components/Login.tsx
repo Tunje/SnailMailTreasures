@@ -17,7 +17,7 @@ const Login = () => {
 
     try {
       // Send credentials to backend for verification
-      const url = `${import.meta.env.VITE_API_BASE_URL}/auth/login`;
+      const url = `${import.meta.env.VITE_API_BASE_URL}/api/auth/login`;
       console.log("Login URL:", url);
       const response = await axios.post(url, { email, password });
       const { data } = response;
