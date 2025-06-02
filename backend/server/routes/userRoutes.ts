@@ -23,17 +23,7 @@ const userRouter = express.Router();
  *               schema:
  *                 type: array
  *                 items:
- *                   type: object
- *                   properties:
- *                     _id:
- *                       type: string
- *                       example: "507f1f77bcf86cd799439011"
- *                     userName:
- *                       type: string
- *                       example: "john_doe"
- *                     email:
- *                       type: string
- *                       example: "john@email.com"
+ *                   #ref: '#/components/schemas/User'
  *         500:
  *           description: Internal server error
  *           content:
@@ -65,17 +55,7 @@ const userRouter = express.Router();
  *           content: 
  *             application/json:
  *              schema:
- *                type: object
- *                properties:
- *                  _id:
- *                    type: string
- *                    example: "507f1f77bcf86cd799439011"
- *                  userName:
- *                    type: string
- *                    example: "john_doe"
- *                 email:
- *                    type: string
- *                    example: "john@emai.com"
+ *               $ref: '#/components/schemas/User'
  *         404:
  *           description: User not found
  *           content:
@@ -101,47 +81,37 @@ const userRouter = express.Router();
 /**
  * @swagger
  * /api/users/{userName}:
- *    get:
- *      summary: Get a user by username
- *      tags: [User]
- *      parameters:
+ *   get:
+ *     summary: Get a user by username
+ *     tags: [User]
+ *     parameters:
  *       - in: path
  *         name: userName
  *         required: true
  *         schema:
  *           type: string
  *         description: The username of the user to retrieve
- *      responses:
- *        200:
- *           description: User found
- *           content: 
- *             application/json:
- *              schema:
- *                type: object
- *                properties:
- *                  _id:
- *                    type: string
- *                    example: "507f1f77bcf86cd799439011"
- *                  userName:
- *                    type: string
- *                    example: "john_doe"
- *                 email:
- *                    type: string
- *                    example: "john@emai.com"
- *        404:
- *          description: User not found
- *          content:
- *            application/json:
+ *     responses:
+ *       200:
+ *         description: User found
+ *         content: 
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
+ *       404:
+ *         description: User not found
+ *         content:
+ *           application/json:
  *             schema:
  *               type: object
  *               properties:
  *                 message:
  *                   type: string
  *                   example: "User not found"
- *        500:
- *          description: Server error
- *          content:
- *            application/json:
+ *       500:
+ *         description: Server error
+ *         content:
+ *           application/json:
  *             schema:
  *               type: object
  *               properties:
@@ -153,7 +123,7 @@ const userRouter = express.Router();
 /**
  * @swagger
  * /api/users/updateuser/{id}:
- *    put:
+ *   put:
  *     summary: Update a user by ID
  *     tags: [User]
  *     parameters:
@@ -167,54 +137,45 @@ const userRouter = express.Router();
  *       required: true
  *       content:
  *         application/json:
- *          schema:
- *            type: object
- *            properties:
- *              userName:
- *                type: string
- *                description: The user's new username
- *                example: "john_doe_updated"
- *              email:
- *                type: string
- *                description: The user's new email address
- *                example: "johnsnewemail@email.com"
+ *           schema:
+ *             $ref: '#/components/schemas/UpdateUser'
  *     responses:
- *        200:
- *          description: User updated successfully
- *          content:
- *            application/json:
+ *       200:
+ *         description: User updated successfully
+ *         content:
+ *           application/json:
  *             schema:
  *               type: object
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "User updated successfully"
- *        404:
- *          description: User not found
- *          content:
- *            application/json:
+ *                   example: User updated successfully
+ *       404:
+ *         description: User not found
+ *         content:
+ *           application/json:
  *             schema:
  *               type: object
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "User not found"
- *        500:
- *          description: Server error
- *          content:
- *            application/json:
+ *                   example: User not found
+ *       500:
+ *         description: Server error
+ *         content:
+ *           application/json:
  *             schema:
  *               type: object
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "An unknown error occurred"
+ *                   example: An unknown error occurred
  */
 
 /**
  * @swagger
  * /api/users/deleteuser/{id}:
- *    delete:
+ *   delete:
  *     summary: Delete a user by ID
  *     tags: [User]
  *     parameters:
@@ -225,30 +186,30 @@ const userRouter = express.Router();
  *           type: string
  *         description: The ID of the user to delete
  *     responses:
- *        200:
- *          description: User deleted successfully
- *          content:
- *            application/json:
+ *       200:
+ *         description: User deleted successfully
+ *         content:
+ *           application/json:
  *             schema:
  *               type: object
  *               properties:
  *                 message:
  *                   type: string
  *                   example: "User deleted successfully"
- *        404:
- *          description: User not found
- *          content:
- *            application/json:
+ *       404:
+ *         description: User not found
+ *         content:
+ *           application/json:
  *             schema:
  *               type: object
  *               properties:
  *                 message:
  *                   type: string
  *                   example: "User not found"
- *        500:
- *          description: Server error
- *          content:
- *            application/json:
+ *       500:
+ *         description: Server error
+ *         content:
+ *           application/json:
  *             schema:
  *               type: object
  *               properties:
