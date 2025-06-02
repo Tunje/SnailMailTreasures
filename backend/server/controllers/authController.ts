@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import User, { UserDocument } from "../models/userModel";
+import User from "../models/userModel";
 import { generateToken } from "../utils/generateToken";
 
 // Register a new user
