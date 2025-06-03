@@ -11,7 +11,7 @@ const itemRouter = express.Router();
 
 /**
  * @swagger
- * /api/allitems:
+ * /api/items/allitems:
  *    get:
  *      summary: Get all items
  *      tags: [Item]
@@ -38,7 +38,7 @@ const itemRouter = express.Router();
 
 /**
  * @swagger
- * /api/item/{id}:
+ * /api/items/{id}:
  *    get:
  *      summary: Get an item by ID
  *      tags: [Item]
@@ -80,7 +80,7 @@ const itemRouter = express.Router();
 
 /**
  * @swagger
- * /api/createitem:
+ * /api/items/createitem:
  *   post:
  *     summary: Create a new item
  *     tags: [Item]
@@ -121,7 +121,7 @@ const itemRouter = express.Router();
 
 /**
  * @swagger
- * /api/updateitem/{id}:
+ * /api/items/{id}:
  *   put:
  *     summary: Update an item by ID
  *     tags: [Item]
@@ -179,7 +179,7 @@ const itemRouter = express.Router();
 
 /**
  * @swagger
- * /api/deleteitem/{id}:
+ * /api/items/{id}:
  *   delete:
  *     summary: Delete an item by ID
  *     tags: [Item]
@@ -224,10 +224,10 @@ const itemRouter = express.Router();
  */
 
 itemRouter.get("/allitems", getAllItems);
-itemRouter.get("/item/:id", getItemById);
+itemRouter.get("/:id", getItemById);
 itemRouter.post("/createitem", createItem);
-itemRouter.put("/updateitem/:id", updateItemById);
-itemRouter.delete("/deleteitem/:id", deleteItem);
+itemRouter.put("/:id", updateItemById);
+itemRouter.delete("/:id", deleteItem);
 
 // (!!!) Below was a search endpoint which was added but the project may not require it.
 
