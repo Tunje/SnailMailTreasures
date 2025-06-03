@@ -6,6 +6,7 @@ export interface UserDocument extends Document {
   userName: string;
   email: string;
   password: string;
+  favourites: mongoose.Schema.Types.ObjectId[];
   _id: mongoose.Schema.Types.ObjectId
   comparePassword: (password: string) => Promise<boolean>;
 }
@@ -29,6 +30,10 @@ const UserSchema: Schema<UserDocument> = new Schema({
     required: true,
     minlength: 8
   },
+  favourites: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Item", // Reference to Item model
+  }]
 }, {
   timestamps: true, // Automatically add createdAt and updatedAt fields
 });
