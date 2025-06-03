@@ -4,7 +4,8 @@ import {
   getAllItems, 
   getItemById, 
   createItem, 
-  updateItemById, 
+  updateItemById,
+  addDealToItem, 
   deleteItem 
 } from "../controllers/itemController";
 
@@ -14,6 +15,7 @@ itemRouter.get("/allitems", getAllItems);
 itemRouter.get("/item/:id", getItemById);
 itemRouter.post("/createitem", protect, createItem);
 itemRouter.put("/updateitem/:id", protect, updateItemById);
+itemRouter.put("/adddeal/:id", protect, addDealToItem);
 itemRouter.delete("/deleteitem/:id", protect, deleteItem);
 
 export default itemRouter;
