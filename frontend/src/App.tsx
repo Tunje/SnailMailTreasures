@@ -7,6 +7,7 @@ import PlaceholderHomePage from './components/PlaceholderHomePage'
 import Login from './components/Login'
 import Registration from './components/Registration'
 import SearchResultsPage from './pages/SearchResultsPage'
+import FavoritesPage from './pages/FavoritesPage'
 import UserPage from './components/UserPage'
 import AddItemPage from './components/AddItemPage'
 import CartPage from './components/CartPage';
@@ -26,7 +27,7 @@ function App() {
             <Route path="/search" element={<SearchResultsPage query={''} />} />
             <Route path="/shop" element={<SearchResultsPage query={''} />} />
             <Route path="/deals" element={<PlaceholderHomePage />} />
-            <Route path="/favorites" element={<PlaceholderHomePage />} />
+            <Route path="/favorites" element={<FavoritesPage />} />
             <Route path="/cart" element={<CartPage />} />
             <Route path="/user" element={<UserPage />} />
             <Route path="/item/:id" element={<ItemDetailPage />} />
