@@ -1,9 +1,9 @@
-import swaggerJSDoc from "swagger-jsdoc";
+import swaggerJSDoc, { Options } from "swagger-jsdoc";
 import { UserSchema } from "./schemas/userSchemas"
 import { CreateUserSchema, RegisteredUserSchema, UpdateUserSchema} from "./schemas/authSchemas";
 import { ItemSchema, CreateItemSchema, UpdateItemSchema } from "./schemas/itemSchemas";
 
-const options = {
+const options: Options = {
   definition: {
     openapi: "3.0.0",
     info: {
