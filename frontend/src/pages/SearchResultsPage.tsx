@@ -23,10 +23,6 @@ function firebaseGsToHttpUrl(gsUrl: string): string {
 // Placeholder image URL - defined once to avoid recreating on each render
 const PLACEHOLDER_IMAGE = 'https://via.placeholder.com/300x200?text=SnailMail+Treasures';
 
-// Preload the placeholder image
-const preloadImage = new Image();
-preloadImage.src = PLACEHOLDER_IMAGE;
-
 export default function SearchResultsPage({ query }: { query: string }) {
   // Also get query from URL parameters
   const location = useLocation();
