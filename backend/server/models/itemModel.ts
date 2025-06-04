@@ -8,6 +8,7 @@ export interface ItemDocument extends Document {
   imageUrl: string; // Image URL or file path
   price: number;
   userId: mongoose.Schema.Types.ObjectId; // Reference to User model
+  favouriteCount: number;
   deal: {
     isOnDeal: boolean; // Indicates if the item is on deal
     dealPrice: number; // Price during the deal
@@ -53,6 +54,11 @@ const ItemSchema: Schema<ItemDocument> = new Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User", // Reference to link to User model
       required: true,
+    },
+    favouriteCount: {
+      type: Number,
+      default: 0,
+      min: 0 // Prevents values < 0 at schema level
     },
     deal: {
       isOnDeal: {type: Boolean, default: false}, // Indicates if the item is on deal
