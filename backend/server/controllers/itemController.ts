@@ -77,6 +77,29 @@ export const updateItemById = async (req: AuthRequest, res: Response): Promise<a
   }
 };
 
+// Add a deal property to an item
+export const addDealToItem = async (req: AuthRequest, res: Response): Promise<any> => {
+  try {
+    const item = await Item.findById(req.params.id);
+    if (!item) return res.status(404).json({ message: "Item not found" });
+
+    // Ensure user owns the item
+    if (item.userId.toString() !== req.user?._id.toString()) {
+      return res.status(403).json({ message: "You are unauthorized to edit this item." });
+    }
+
+    item.deal = {
+      isOnDeal: req.body.isOnDeal,
+      dealPrice: req.body.dealPrice,
+      dealExpires: req.body.dealExpires,
+    };
+
+    const updatedItem = await item.save();
+    res.status(200).json(updatedItem);
+  } catch (error) {
+    res.status(500).json({ message: "Failed to add deal to item." });
+}};
+
 // Delete an item
 export const deleteItem = async (req: AuthRequest, res: Response): Promise<any> => {
   try {

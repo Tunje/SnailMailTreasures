@@ -7,6 +7,8 @@ import cors from "cors";
 import userRouter from "./server/routes/userRoutes";
 import itemRouter from "./server/routes/itemRoutes";
 import authRouter from "./server/routes/authRoutes";
+import swaggerUi from "swagger-ui-express";
+import swaggerSpec from "./server/swagger/swaggerConfig";
 import logger from "./server/utils/logger";
 
 const app = express();
@@ -16,6 +18,7 @@ const PORT = process.env.PORT || 3000; // Default port is 5000, backup port is 3
 const allowedOrigins = [
   "http://localhost:5173", // React frontend
   "https://snailmailtreaures.netlify.app", // Netlify frontend
+  "https://snailmailtreasures.onrender.com" // Render backend
 ];
 
 app.use(
@@ -55,6 +58,14 @@ app.use("/api/auth", authRouter); // All routes begin with /api/auth
 app.use("/api/users", userRouter); // All routes begin with /api/users
 app.use("/api/items", itemRouter); // All routes begin with /api/items
 
+// Swagger documentation
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+
 // Start server
 connectToDatabase();
-app.listen(PORT, () => logger.info(`Server running on ${PORT}`));
+app.listen(PORT, () => {
+  console.log(`Server running on ${PORT}`)
+  console.log(`Swagger docs available at http://localhost:${PORT}/api-docs`);
+});

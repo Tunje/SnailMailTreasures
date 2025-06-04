@@ -1,5 +1,6 @@
-import express, { Request, Response } from "express";
+import { Request, Response } from "express";
 import User from "../models/userModel";
+import Item from "../models/itemModel";
 import logger from "../utils/logger";
 
 // GET all users
@@ -101,6 +102,40 @@ export const updateUser = async (req: Request, res: Response): Promise<any> => {
   }
 };
 
+// POST - Add an item to user's favourites
+export const addToFavourite = async (req: Request, res: Response): Promise<any> => {
+  try {
+    const userId = req.params.id;
+    const itemId = req.body.itemId;
+
+    // Find the user by ID
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Check if the item already exists in favourites
+    if (user.favourites.includes(itemId)) {
+      return res.status(400).json({ message: "Item already in favourites" });
+    }
+
+    // Add the item to favourites
+    user.favourites.push(itemId);
+    await user.save();
+
+    // Optionally, you can also update the Item model if needed
+    await Item.findByIdAndUpdate(itemId, { $inc: { favouriteCount: 1 } });
+
+    res.status(200).json({ message: "Item added to favourites", favourites: user.favourites });
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      res.status(500).json({ message: error.message });
+    } else {
+      res.status(500).json({ message: "An unknown error occurred" });
+    }
+  }
+};
+
 // DELETE - Remove a user by ID
 export const deleteUser = async (req: Request, res: Response): Promise<any> => {
   try {
@@ -113,76 +148,6 @@ export const deleteUser = async (req: Request, res: Response): Promise<any> => {
     res.status(200).json({
       message: `User by name '${deletedUser.userName}' with ID (ID: ${deletedUser._id}) was successfully deleted.`,
     });
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      res.status(500).json({ message: error.message });
-    } else {
-      res.status(500).json({ message: "An unknown error occurred" });
-    }
-  }
-};
-
-// POST - Create a new user
-export const createUser = async (req: Request, res: Response): Promise<any> => {
-  try {
-    // Log the request body to help debug
-    logger.info("Request body:", req.body);
-
-    const { username, email } = req.body;
-
-    // Check if user already exists
-    const existingUser = await User.findOne({ userName: username });
-    if (existingUser) {
-      return res
-        .status(400)
-        .json({ message: "User with this username already exists" });
-    }
-
-    // Create new user
-    const newUser = new User({
-      userName: username,
-      email,
-      password: "password123", // Default password for seeded users
-    });
-
-    // Save user to database
-    const savedUser = await newUser.save();
-    res.status(201).json(savedUser);
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      res.status(500).json({ message: error.message });
-    } else {
-      res.status(500).json({ message: "An unknown error occurred" });
-    }
-  }
-};
-
-// POST - Create a new user
-export const createUser = async (req: Request, res: Response): Promise<any> => {
-  try {
-    // Log the request body to help debug
-    logger.info("Request body:", req.body);
-
-    const { username, email } = req.body;
-
-    // Check if user already exists
-    const existingUser = await User.findOne({ userName: username });
-    if (existingUser) {
-      return res
-        .status(400)
-        .json({ message: "User with this username already exists" });
-    }
-
-    // Create new user
-    const newUser = new User({
-      userName: username,
-      email,
-      password: "password123", // Default password for seeded users
-    });
-
-    // Save user to database
-    const savedUser = await newUser.save();
-    res.status(201).json(savedUser);
   } catch (error: unknown) {
     if (error instanceof Error) {
       res.status(500).json({ message: error.message });
