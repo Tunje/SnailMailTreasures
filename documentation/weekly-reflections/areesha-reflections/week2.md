@@ -1,0 +1,1 @@
+This week we decided on the project layout and set up the GitHub repo. I learned how to send pull requests and how to ask for code reviews. I worked on the navigation bar and its styling based on our wireframe. We agreed on a color scheme, assigned components, and had two team meetings. Communication is going well so far, and I’m feeling confident about our organized start.
