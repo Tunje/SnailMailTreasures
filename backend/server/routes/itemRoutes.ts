@@ -123,7 +123,7 @@ const itemRouter = express.Router();
 
 /**
  * @swagger
- * /api/items/{id}:
+ * /api/items/updateitem/{id}:
  *   put:
  *     summary: Update an item by ID
  *     tags: [Item]
@@ -181,6 +181,82 @@ const itemRouter = express.Router();
 
 /**
  * @swagger
+ * /api/item/{id}/deal:
+ *   put:
+ *     summary: Add or update a deal on an item
+ *     tags: [Item]
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID of the item to update with a deal
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - isOnDeal
+ *               - dealPrice
+ *               - dealExpires
+ *             properties:
+ *               isOnDeal:
+ *                 type: boolean
+ *                 example: true
+ *               dealPrice:
+ *                 type: number
+ *                 example: 49.99
+ *               dealExpires:
+ *                 type: string
+ *                 format: date-time
+ *                 example: "2025-12-31T23:59:59Z"
+ *     responses:
+ *       200:
+ *         description: Deal added to item successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Item'
+ *       403:
+ *         description: Unauthorized to edit this item
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: You are unauthorized to edit this item.
+ *       404:
+ *         description: Item not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Item not found
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Failed to add deal to item.
+ */
+
+
+/**
+ * @swagger
  * /api/items/{id}:
  *   delete:
  *     summary: Delete an item by ID
@@ -226,10 +302,10 @@ const itemRouter = express.Router();
  */
 
 itemRouter.get("/allitems", getAllItems);
-itemRouter.get("/item/:id", getItemById);
+itemRouter.get("/:id", getItemById);
 itemRouter.post("/createitem", protect, createItem);
 itemRouter.put("/updateitem/:id", protect, updateItemById);
 itemRouter.put("/adddeal/:id", protect, addDealToItem);
-itemRouter.delete("/deleteitem/:id", protect, deleteItem);
+itemRouter.delete("/:id", protect, deleteItem);
 
 export default itemRouter;
