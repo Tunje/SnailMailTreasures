@@ -1,0 +1,1 @@
+This week we chose to build an e-commerce site and set up the GitHub repo. Caught up quickly. We had two team meetings and shared some layout ideas, though not everyone participated yet. Communication feels smooth so far, and I’m feeling good about our organized start.
