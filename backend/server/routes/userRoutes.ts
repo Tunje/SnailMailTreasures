@@ -13,7 +13,7 @@ const userRouter = express.Router();
 
 /**
  * @swagger
- * /api/users:
+ * /api/users/allusers:
  *    get:
  *      summary: Get all users
  *      tags: [User]
@@ -124,7 +124,7 @@ const userRouter = express.Router();
 
 /**
  * @swagger
- * /api/users/updateuser/{id}:
+ * /api/users/{id}:
  *   put:
  *     summary: Update a user by ID
  *     tags: [User]
@@ -176,7 +176,7 @@ const userRouter = express.Router();
 
 /**
  * @swagger
- * /api/users/deleteuser/{id}:
+ * /api/users/{id}:
  *   delete:
  *     summary: Delete a user by ID
  *     tags: [User]
