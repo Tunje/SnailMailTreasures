@@ -12,10 +12,8 @@ const options = {
       description: "API documentation for Snailmail Treasures",
     },
     servers: [
-      {
-        url: "http://localhost:3000",
-        description: "Development server",
-      },
+      { url: "http://localhost:3000", description: "Development server", },
+      { url: "https://snailmailtreasures.onrender.com", description: "Production server", },
     ],
     components: {
       securitySchemes: {
@@ -39,7 +37,7 @@ const options = {
       },
     },
   },
-  apis: ["./routes/*.js", "./src/models/*.js"],
+  apis: ["./dist/server/routes/*.js", "./dist/server/models/*.js"],
 };
 
 const swaggerSpec = swaggerJSDoc(options);

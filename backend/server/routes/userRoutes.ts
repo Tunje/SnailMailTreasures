@@ -3,15 +3,17 @@ import {
   getAllUsers, 
   getUserById, 
   getUserByUsername, 
-  updateUser, 
+  updateUser,
+  addToFavourite, 
   deleteUser 
 } from "../controllers/userController";
+import { protect } from "../middleware/authMiddleware";
 
 const userRouter = express.Router();
 
 /**
  * @swagger
- * /api/users:
+ * /api/users/allusers:
  *    get:
  *      summary: Get all users
  *      tags: [User]
@@ -54,28 +56,28 @@ const userRouter = express.Router();
  *           description: User found
  *           content: 
  *             application/json:
- *              schema:
- *               $ref: '#/components/schemas/User'
+ *               schema:
+ *                 $ref: '#/components/schemas/User'
  *         404:
  *           description: User not found
  *           content:
  *             application/json:
- *              schema:
- *                type: object
- *                properties:
- *                  message:
- *                    type: string
- *                    example: "User not found"
+ *               schema:
+ *                 type: object
+ *                 properties:
+ *                   message:
+ *                     type: string
+ *                     example: "User not found"
  *         500:
  *           description: Server error
  *           content:
  *             application/json:
- *              schema:
- *                type: object
- *                properties:
- *                  message:
- *                    type: string
- *                    example: "An unknown error occurred"
+ *               schema:
+ *                 type: object
+ *                 properties:
+ *                   message:
+ *                     type: string
+ *                     example: "An unknown error occurred"
  */
 
 /**
@@ -122,7 +124,7 @@ const userRouter = express.Router();
 
 /**
  * @swagger
- * /api/users/updateuser/{id}:
+ * /api/users/{id}:
  *   put:
  *     summary: Update a user by ID
  *     tags: [User]
@@ -174,7 +176,7 @@ const userRouter = express.Router();
 
 /**
  * @swagger
- * /api/users/deleteuser/{id}:
+ * /api/users/{id}:
  *   delete:
  *     summary: Delete a user by ID
  *     tags: [User]
@@ -219,9 +221,10 @@ const userRouter = express.Router();
  */
 
 userRouter.get("/allusers", getAllUsers);
-userRouter.get("/user/:id", getUserById);
-userRouter.get("/user/:userName", getUserByUsername);
-userRouter.put("/updateuser/:id", updateUser);
-userRouter.delete("/deleteuser/:id", deleteUser);
+userRouter.get("/:id", getUserById);
+userRouter.get("/:userName", getUserByUsername);
+userRouter.put("/:id", updateUser);
+userRouter.post("/:id", protect, addToFavourite)
+userRouter.delete("/:id", deleteUser);
 
 export default userRouter;

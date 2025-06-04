@@ -12,6 +12,18 @@ export const ItemSchema = {
     category: { type: "string", example: "Photography" },
     price: { type: "number", example: 150.0 },
     userId: { type: "string", example: "507f1f77bcf86cd799439012" },
+    deal: {
+      type: "object",
+      properties: {
+        isOnDeal: {type: "boolean", example: true},
+        dealPrice: {type: "number", examble: 120.0},
+        dealExpires: {
+          type: "string",
+          format: "date-time",
+          example: "2025-12-31T23:59:59Z"
+        }
+      }
+    },
     createdAt: {
       type: "string",
       format: "date-time",
