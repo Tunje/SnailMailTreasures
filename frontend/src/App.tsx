@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import ItemDetailPage from './components/ItemDetailPage';
 import "./index.css";
+import "./styles/dealAnimations.css";
 import Navbar from "./components/navbar";
 import Footer from "./components/footer";
 import PlaceholderHomePage from './components/PlaceholderHomePage'
