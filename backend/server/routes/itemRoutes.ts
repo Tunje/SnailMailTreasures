@@ -181,7 +181,7 @@ const itemRouter = express.Router();
 
 /**
  * @swagger
- * /api/item/{id}/deal:
+ * /api/items/deal/{id}:
  *   put:
  *     summary: Add or update a deal on an item
  *     tags: [Item]
@@ -305,7 +305,7 @@ itemRouter.get("/allitems", getAllItems);
 itemRouter.get("/:id", getItemById);
 itemRouter.post("/createitem", protect, createItem);
 itemRouter.put("/updateitem/:id", protect, updateItemById);
-itemRouter.put("/adddeal/:id", protect, addDealToItem);
+itemRouter.put("/deal/:id", protect, addDealToItem);
 itemRouter.delete("/:id", protect, deleteItem);
 
 export default itemRouter;
