@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { getItemById, deleteItem, Item, setItemDeal, removeItemDeal } from '../services/itemService';
 import { addToCart } from '../services/cartService';
-import { addToFavorite } from '../services/userService';
+import { addToFavorite, removeFromFavorite, getUserById } from '../services/userService';
 
 // Extended Item interface to handle backend field variations
 interface ItemWithBackendFields extends Item {
@@ -38,7 +38,7 @@ const ItemDetailPage: React.FC = () => {
   const [settingDeal, setSettingDeal] = useState(false);
   const [removingDeal, setRemovingDeal] = useState(false);
 
-  // Get current user ID from token
+  // Get current user ID from token for ownership checks
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
 
   // Parse JWT token to get user ID
@@ -124,10 +124,20 @@ const ItemDetailPage: React.FC = () => {
             const userId = payload.id;
             setCurrentUserId(userId);
             
-            // Check if this item is in the user's favorites
-            // This would ideally call an API to get the user's favorites
-            // For now, we'll just check the localStorage or assume not favorite
-            setIsFavorite(false); // Default to not favorite until we implement the check
+            // Check if this item is in the user's favorites by fetching user data
+            try {
+              const userData = await getUserById(userId);
+              if (userData && userData.favourites) {
+                // Check if the item ID is in the user's favorites array
+                const isItemFavorite = userData.favourites.includes(id);
+                setIsFavorite(isItemFavorite);
+                console.log(`Item ${id} is${isItemFavorite ? '' : ' not'} in favorites`);
+              }
+            } catch (error) {
+              console.error('Error checking favorites status:', error);
+              // Default to not favorite if there's an error
+              setIsFavorite(false);
+            }
           }
         }
       } catch (err) {
@@ -323,8 +333,8 @@ const ItemDetailPage: React.FC = () => {
                     setIsFavorite(true);
                     console.log(`Added to favorites: ${item.name}`);
                   } else {
-                    // For now, just toggle the UI state since we don't have a remove function
-                    // In a real app, you would call a removeFromFavorite function
+                    // Remove from favorites
+                    await removeFromFavorite(userId, item._id);
                     setIsFavorite(false);
                     console.log(`Removed from favorites: ${item.name}`);
                   }

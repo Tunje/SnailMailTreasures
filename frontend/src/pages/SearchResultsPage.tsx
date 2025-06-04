@@ -20,9 +20,6 @@ function firebaseGsToHttpUrl(gsUrl: string): string {
 
 // Using Item type imported from itemService
 
-// Placeholder image URL - defined once to avoid recreating on each render
-const PLACEHOLDER_IMAGE = 'https://via.placeholder.com/300x200?text=SnailMail+Treasures';
-
 export default function SearchResultsPage({ query }: { query: string }) {
   // Also get query from URL parameters
   const location = useLocation();
@@ -72,7 +69,7 @@ export default function SearchResultsPage({ query }: { query: string }) {
           {results.map((item) => (
   <Link to={`/item/${item._id}`} key={item._id} style={{ textDecoration: 'none', color: 'inherit' }}>
     <div
-      className="bg-white rounded-lg shadow-md p-4 cursor-pointer hover:shadow-lg transition"
+      className={`bg-white rounded-lg shadow-md p-4 cursor-pointer hover:shadow-lg transition ${item.deal?.isOnDeal ? 'deal-item' : ''}`}
     >
       <div className="h-48 flex items-center justify-center overflow-hidden bg-gray-100 relative">
         {/* Always show placeholder as background */}
@@ -103,9 +100,21 @@ export default function SearchResultsPage({ query }: { query: string }) {
       </div>
       <h2 className="text-xl font-semibold text-[var(--color-primary)] mt-2">{item.itemName || item.name}</h2>
       <p className="text-gray-600 truncate">{item.description}</p>
-      <p className="text-[#CB8427] font-bold mt-1">
-        ${item.price.toFixed(2)}
-      </p>
+      
+      {item.deal?.isOnDeal ? (
+        <div className="flex flex-col mt-1 w-24">
+          <span className="text-sm line-through text-gray-500">${item.price.toFixed(2)}</span>
+          <div className="deal-price-animation">
+            <span className="text-xl font-bold text-red-600">
+              ${item.deal.dealPrice.toFixed(2)}
+            </span>
+          </div>
+        </div>
+      ) : (
+        <p className="text-[#CB8427] font-bold mt-1">
+          ${item.price.toFixed(2)}
+        </p>
+      )}
     </div>
   </Link>
 ))}

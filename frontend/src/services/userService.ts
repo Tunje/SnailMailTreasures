@@ -91,3 +91,14 @@ export const addToFavorite = async (userId: string, itemId: string): Promise<{ m
     throw error;
   }
 };
+
+// Remove item from favorites
+export const removeFromFavorite = async (userId: string, itemId: string): Promise<{ message: string, favourites: string[] }> => {
+  try {
+    const response = await api.delete(`/users/${userId}/favorites/${itemId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error removing item from favorites:', error);
+    throw error;
+  }
+};
