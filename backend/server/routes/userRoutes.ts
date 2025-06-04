@@ -221,10 +221,10 @@ const userRouter = express.Router();
  */
 
 userRouter.get("/allusers", getAllUsers);
-userRouter.get("/user/:id", getUserById);
-userRouter.get("/user/:userName", getUserByUsername);
-userRouter.put("/updateuser/:id", updateUser);
-userRouter.post("/favorites/:id", protect, addToFavourite)
-userRouter.delete("/deleteuser/:id", deleteUser);
+userRouter.get("/:id", getUserById);
+userRouter.get("/:userName", getUserByUsername);
+userRouter.put("/:id", updateUser);
+userRouter.post("/:id", protect, addToFavourite)
+userRouter.delete("/:id", deleteUser);
 
 export default userRouter;
