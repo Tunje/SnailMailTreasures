@@ -13,7 +13,7 @@ const itemRouter = express.Router();
 
 /**
  * @swagger
- * /api/items/allitems:
+ * /api/items/allItems:
  *    get:
  *      summary: Get all items
  *      tags: [Item]
@@ -82,7 +82,7 @@ const itemRouter = express.Router();
 
 /**
  * @swagger
- * /api/items/createitem:
+ * /api/items/createItem:
  *   post:
  *     summary: Create a new item
  *     tags: [Item]
@@ -123,7 +123,7 @@ const itemRouter = express.Router();
 
 /**
  * @swagger
- * /api/items/updateitem/{id}:
+ * /api/items/updateItem/{id}:
  *   put:
  *     summary: Update an item by ID
  *     tags: [Item]
@@ -301,10 +301,10 @@ const itemRouter = express.Router();
  *                   example: "An error occurred while deleting the item"
  */
 
-itemRouter.get("/allitems", getAllItems);
+itemRouter.get("/allItems", getAllItems);
 itemRouter.get("/:id", getItemById);
-itemRouter.post("/createitem", protect, createItem);
-itemRouter.put("/updateitem/:id", protect, updateItemById);
+itemRouter.post("/createItem", protect, createItem);
+itemRouter.put("/updateItem/:id", protect, updateItemById);
 itemRouter.put("/deal/:id", protect, addDealToItem);
 itemRouter.delete("/:id", protect, deleteItem);
 

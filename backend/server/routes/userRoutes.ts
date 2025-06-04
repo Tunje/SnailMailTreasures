@@ -13,7 +13,7 @@ const userRouter = express.Router();
 
 /**
  * @swagger
- * /api/users/allusers:
+ * /api/users/allUsers:
  *    get:
  *      summary: Get all users
  *      tags: [User]
@@ -220,7 +220,7 @@ const userRouter = express.Router();
  *                   example: "An unknown error occurred"
  */
 
-userRouter.get("/allusers", getAllUsers);
+userRouter.get("/allUsers", getAllUsers);
 userRouter.get("/:id", getUserById);
 userRouter.get("/:userName", getUserByUsername);
 userRouter.put("/:id", updateUser);
