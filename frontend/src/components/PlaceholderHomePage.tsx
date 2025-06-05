@@ -64,17 +64,31 @@ const PlaceholderHomePage: React.FC = () => {
             </div>
           ) : (
             featuredItems.map((item) => (
-              <div className="card" key={item._id}>
+              <div 
+                className={`card ${item.deal?.isOnDeal ? 'deal-item' : ''}`} 
+                key={item._id}
+              >
                 <Link to={`/item/${item._id}`} style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}>
                   <div 
-                    className="h-48 bg-cover bg-center" 
+                    className="h-48 bg-cover bg-center"
                     style={{ backgroundImage: `url(${item.imageUrl ? firebaseGsToHttpUrl(item.imageUrl) : item.image})` }}
                   ></div>
                   <div className="p-6">
                     <h3 className="text-xl font-semibold mb-2 text-[var(--color-primary)]">{item.name}</h3>
                     <p className="text-gray-600 mb-4">{item.description.length > 100 ? `${item.description.substring(0, 100)}...` : item.description}</p>
                     <div className="flex justify-between items-center">
-                      <span className="text-xl font-bold text-[var(--color-primary)]">${item.price.toFixed(2)}</span>
+                      {item.deal?.isOnDeal ? (
+                        <div className="flex flex-col w-24">
+                          <span className="text-sm line-through text-gray-500">${item.price.toFixed(2)}</span>
+                          <div className="deal-price-animation">
+                            <span className="text-xl font-bold text-red-600">
+                              ${item.deal.dealPrice.toFixed(2)}
+                            </span>
+                          </div>
+                        </div>
+                      ) : (
+                        <span className="text-xl font-bold text-[var(--color-primary)]">${item.price.toFixed(2)}</span>
+                      )}
                       <button className="btn-primary">
                         View Details
                       </button>

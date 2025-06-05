@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import axios from "axios";
+import api from "../services/api";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -16,23 +16,41 @@ const Login = () => {
     }
 
     try {
-      // Send credentials to backend for verification
-      const baseUrl = import.meta.env.VITE_API_BASE_URL || 'https://snailmailtreasures.onrender.com/api';
-      const url = `${baseUrl}/auth/login`;
-      console.log("Login URL:", url);
-      const response = await axios.post(url, { email, password });
+      // Send credentials to backend for verification using the configured API service
+      console.log("Attempting login with API service");
+      console.log(`Login request to: ${api.defaults.baseURL}/auth/login`);
+      
+      const response = await api.post("/auth/login", { email, password });
       const { data } = response;
       localStorage.setItem("token", data.token);
 
-      if (response.status === 200) {
-        alert("Login successful");
-        navigate("/home");
+      alert("Login successful");
+      navigate("/home");
+    } catch (error: any) {
+      console.error("Login error:", error);
+      
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        console.log("Error response data:", error.response.data);
+        console.log("Error response status:", error.response.status);
+        
+        if (error.response.status === 401) {
+          alert("Invalid email or password. Please try again.");
+        } else if (error.response.data && error.response.data.message) {
+          alert(`Login failed: ${error.response.data.message}`);
+        } else {
+          alert(`Login failed with status code: ${error.response.status}`);
+        }
+      } else if (error.request) {
+        // The request was made but no response was received
+        console.log("Error request:", error.request);
+        alert("No response received from server. Please check your internet connection.");
       } else {
-        alert("Incorrect email or password");
+        // Something happened in setting up the request that triggered an Error
+        console.log("Error message:", error.message);
+        alert(`Login error: ${error.message}`);
       }
-    } catch (error) {
-      alert("An error occurred during login");
-      console.error(error);
     }
   };
 

@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { getItemById, deleteItem, Item } from '../services/itemService';
+import { getItemById, deleteItem, Item, setItemDeal, removeItemDeal } from '../services/itemService';
 import { addToCart } from '../services/cartService';
+import { addToFavorite, removeFromFavorite, getUserById } from '../services/userService';
 
 // Extended Item interface to handle backend field variations
 interface ItemWithBackendFields extends Item {
@@ -29,8 +30,27 @@ const ItemDetailPage: React.FC = () => {
   const [isOwner, setIsOwner] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  
+  // Deal states
+  const [showDealForm, setShowDealForm] = useState(false);
+  const [discountPercentage, setDiscountPercentage] = useState(10);
+  const [expirationDays, setExpirationDays] = useState(7);
+  const [settingDeal, setSettingDeal] = useState(false);
+  const [removingDeal, setRemovingDeal] = useState(false);
 
-  // Check if current user is the owner of the item using just the token
+  // Get current user ID from token for ownership checks
+  const [currentUserId, setCurrentUserId] = useState<string | null>(null);
+
+  // Parse JWT token to get user ID
+  const parseJwt = (token: string) => {
+    try {
+      return JSON.parse(atob(token.split('.')[1]));
+    } catch (e) {
+      return null;
+    }
+  };
+
+  // Check if current user is the owner of the item and get user ID
   useEffect(() => {
     const checkOwnership = () => {
       try {
@@ -40,19 +60,11 @@ const ItemDetailPage: React.FC = () => {
         const token = localStorage.getItem('token');
         if (!token) return;
         
-        // Decode JWT to get user id
-        function parseJwt(token: string) {
-          try {
-            return JSON.parse(atob(token.split('.')[1]));
-          } catch (e) {
-            return null;
-          }
-        }
-        
         const payload = parseJwt(token);
         if (!payload || !payload.id) return;
         
-        const currentUserId = payload.id;
+        const userId = payload.id;
+        setCurrentUserId(userId);
         
         // Get the item's user ID, handling different formats
         let itemUserId = item.userId;
@@ -63,13 +75,13 @@ const ItemDetailPage: React.FC = () => {
         }
         
         console.log('Ownership check:', { 
-          userIdFromToken: currentUserId, 
+          userIdFromToken: userId, 
           itemUserId: itemUserId,
           rawUserId: item.userId
         });
         
         // Compare user ID from token with item's user ID
-        const isOwner = Boolean(itemUserId && String(currentUserId) === String(itemUserId));
+        const isOwner = Boolean(itemUserId && String(userId) === String(itemUserId));
         console.log('Is owner:', isOwner);
         
         setIsOwner(isOwner);
@@ -103,6 +115,31 @@ const ItemDetailPage: React.FC = () => {
         console.log(`ItemDetailPage: Item fetch completed in ${endTime - startTime}ms`);
         
         setItem(itemData);
+        
+        // Check if the item is in the user's favorites
+        const token = localStorage.getItem('token');
+        if (token) {
+          const payload = parseJwt(token);
+          if (payload && payload.id) {
+            const userId = payload.id;
+            setCurrentUserId(userId);
+            
+            // Check if this item is in the user's favorites by fetching user data
+            try {
+              const userData = await getUserById(userId);
+              if (userData && userData.favourites) {
+                // Check if the item ID is in the user's favorites array
+                const isItemFavorite = userData.favourites.includes(id);
+                setIsFavorite(isItemFavorite);
+                console.log(`Item ${id} is${isItemFavorite ? '' : ' not'} in favorites`);
+              }
+            } catch (error) {
+              console.error('Error checking favorites status:', error);
+              // Default to not favorite if there's an error
+              setIsFavorite(false);
+            }
+          }
+        }
       } catch (err) {
         console.error('ItemDetailPage: Error fetching item:', err);
         setError('Failed to load item details. Please try again later.');
@@ -116,22 +153,137 @@ const ItemDetailPage: React.FC = () => {
   
   // Handle item deletion
   const handleDeleteItem = async () => {
-    if (!id) return;
+    if (!item || !item._id) return;
     
     try {
       setDeleting(true);
-      console.log('Attempting to delete item with ID:', id);
-      
-      const response = await deleteItem(id);
-      console.log('Delete response:', response);
-      
-      // Redirect to home page after successful deletion
-      navigate('/');
+      await deleteItem(item._id);
+      console.log('Item deleted successfully');
+      navigate('/shop');
     } catch (err) {
       console.error('Error deleting item:', err);
-      setError('Failed to delete item. Please try again later.');
       setDeleting(false);
       setShowDeleteConfirm(false);
+      // Show error message to user
+      alert('Failed to delete item. Please try again.');
+    }
+  };
+
+  // Handle setting a deal on the item
+  const handleSetDeal = async () => {
+    if (!item || !item._id) return;
+    
+    // Get JWT token from localStorage and decode it
+    const token = localStorage.getItem('token');
+    if (!token) {
+      alert('Please log in to set deals on items');
+      return;
+    }
+    
+    // Decode the token to get the user ID
+    const payload = parseJwt(token);
+    if (!payload || !payload.id) {
+      alert('Invalid login session. Please log in again.');
+      return;
+    }
+    
+    // Get the user ID from the decoded token
+    const userId = payload.id;
+    
+    // Check if the user is the owner of the item
+    let itemUserId = item.userId;
+    if (itemUserId && typeof itemUserId === 'object') {
+      itemUserId = (itemUserId as any)._id || (itemUserId as any).id;
+    }
+    
+    // Verify ownership
+    if (String(userId) !== String(itemUserId)) {
+      alert('You can only set deals on items you own.');
+      return;
+    }
+    
+    try {
+      setSettingDeal(true);
+      
+      // Validate inputs
+      if (discountPercentage <= 0 || discountPercentage >= 100) {
+        alert('Discount percentage must be between 1 and 99');
+        setSettingDeal(false);
+        return;
+      }
+      
+      // Call the API to set the deal
+      await setItemDeal(item._id, discountPercentage, expirationDays);
+      
+      // Refresh the item data
+      const updatedItem = await getItemById(item._id);
+      setItem(updatedItem);
+      
+      // Reset UI state
+      setShowDealForm(false);
+      setSettingDeal(false);
+      
+      console.log('Deal set successfully');
+    } catch (err) {
+      console.error('Error setting deal:', err);
+      setSettingDeal(false);
+      // Show error message to user
+      alert('Failed to set deal. Please try again.');
+    }
+  };
+
+  // Handle removing a deal from the item
+  const handleRemoveDeal = async () => {
+    if (!item || !item._id) return;
+    
+    // Get JWT token from localStorage and decode it
+    const token = localStorage.getItem('token');
+    if (!token) {
+      alert('Please log in to remove deals from items');
+      return;
+    }
+    
+    // Decode the token to get the user ID
+    const payload = parseJwt(token);
+    if (!payload || !payload.id) {
+      alert('Invalid login session. Please log in again.');
+      return;
+    }
+    
+    // Get the user ID from the decoded token
+    const userId = payload.id;
+    
+    // Check if the user is the owner of the item
+    let itemUserId = item.userId;
+    if (itemUserId && typeof itemUserId === 'object') {
+      itemUserId = (itemUserId as any)._id || (itemUserId as any).id;
+    }
+    
+    // Verify ownership
+    if (String(userId) !== String(itemUserId)) {
+      alert('You can only remove deals from items you own.');
+      return;
+    }
+    
+    try {
+      setRemovingDeal(true);
+      
+      // Call the API to remove the deal
+      await removeItemDeal(item._id);
+      
+      // Refresh the item data
+      const updatedItem = await getItemById(item._id);
+      setItem(updatedItem);
+      
+      // Reset UI state
+      setRemovingDeal(false);
+      
+      console.log('Deal removed successfully');
+    } catch (err) {
+      console.error('Error removing deal:', err);
+      setRemovingDeal(false);
+      // Show error message to user
+      alert('Failed to remove deal. Please try again.');
     }
   };
 
@@ -156,9 +308,40 @@ const ItemDetailPage: React.FC = () => {
           <div className="self-end mb-2">
             <button 
               className="p-2 rounded-full hover:bg-gray-100 transition-colors"
-              onClick={() => {
-                setIsFavorite(!isFavorite);
-                console.log(`${isFavorite ? 'Removed from' : 'Added to'} favorites: ${item.name}`);
+              onClick={async () => {
+                // Get JWT token from localStorage and decode it
+                const token = localStorage.getItem('token');
+                if (!token) {
+                  alert('Please log in to add items to favorites');
+                  return;
+                }
+                
+                // Decode the token to get the user ID
+                const payload = parseJwt(token);
+                if (!payload || !payload.id) {
+                  alert('Invalid login session. Please log in again.');
+                  return;
+                }
+                
+                const userId = payload.id;
+                setCurrentUserId(userId);
+                
+                try {
+                  if (!isFavorite) {
+                    // Add to favorites
+                    await addToFavorite(userId, item._id);
+                    setIsFavorite(true);
+                    console.log(`Added to favorites: ${item.name}`);
+                  } else {
+                    // Remove from favorites
+                    await removeFromFavorite(userId, item._id);
+                    setIsFavorite(false);
+                    console.log(`Removed from favorites: ${item.name}`);
+                  }
+                } catch (error) {
+                  console.error('Error updating favorites:', error);
+                  alert('Failed to update favorites. Please try again.');
+                }
               }}
               aria-label={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
             >
@@ -184,7 +367,31 @@ const ItemDetailPage: React.FC = () => {
           <div>
             <h1 className="text-3xl font-bold text-[var(--color-primary)] mb-2">{item.name}</h1>
             <p className="text-gray-700 mb-4">{item.description}</p>
-            <p className="text-xl font-bold text-[var(--color-primary)] mb-4">${item.price.toFixed(2)}</p>
+            
+            {/* Price display with deal info if applicable */}
+            {item.deal && item.deal.isOnDeal ? (
+              <div className="mb-4">
+                <p className="text-xl font-bold text-green-600">
+                  ${item.deal.dealPrice.toFixed(2)}
+                  <span className="text-sm text-gray-500 line-through ml-2">
+                    ${item.price.toFixed(2)}
+                  </span>
+                </p>
+                <p className="text-sm text-green-600">
+                  {Math.round((1 - item.deal.dealPrice / item.price) * 100)}% off
+                  {item.deal.dealExpires && (
+                    <span className="ml-2">
+                      • Expires {new Date(item.deal.dealExpires).toLocaleDateString()}
+                    </span>
+                  )}
+                </p>
+              </div>
+            ) : (
+              <p className="text-xl font-bold text-[var(--color-primary)] mb-4">
+                ${item.price.toFixed(2)}
+              </p>
+            )}
+            
             <p className="text-sm text-gray-500 mb-2">Category: {item.category || 'N/A'}</p>
             <p className="text-sm text-gray-500">Listed: {item.createdAt ? new Date(item.createdAt).toLocaleDateString() : 'N/A'}</p>
           </div>
@@ -233,37 +440,121 @@ const ItemDetailPage: React.FC = () => {
               </Link>
             </div>
             
-            {/* Delete button - only visible to item owner */}
+            {/* Owner-only actions: Deal management and Delete */}
             {isOwner && (
-              <div className="mt-4">
-                {!showDeleteConfirm ? (
-                  <button 
-                    className="w-full text-red-600 border border-red-600 py-2 px-4 rounded hover:bg-red-50 transition-colors"
-                    onClick={() => setShowDeleteConfirm(true)}
-                  >
-                    Delete Item
-                  </button>
+              <div className="mt-4 space-y-4">
+                {/* Deal management */}
+                {!showDealForm ? (
+                  <div>
+                    {item.deal && item.deal.isOnDeal ? (
+                      <button 
+                        className="w-full text-orange-600 border border-orange-600 py-2 px-4 rounded hover:bg-orange-50 transition-colors mb-2"
+                        onClick={() => handleRemoveDeal()}
+                        disabled={removingDeal}
+                      >
+                        {removingDeal ? 'Removing Deal...' : 'Remove Deal'}
+                      </button>
+                    ) : (
+                      <button 
+                        className="w-full text-green-600 border border-green-600 py-2 px-4 rounded hover:bg-green-50 transition-colors mb-2"
+                        onClick={() => setShowDealForm(true)}
+                      >
+                        Set Deal
+                      </button>
+                    )}
+                  </div>
                 ) : (
-                  <div className="border border-red-200 rounded p-3 bg-red-50">
-                    <p className="text-red-700 mb-2">Are you sure you want to delete this item?</p>
+                  <div className="border border-green-200 rounded p-3 bg-green-50">
+                    <h3 className="font-medium text-green-800 mb-2">Set a Deal</h3>
+                    
+                    <div className="mb-3">
+                      <label htmlFor="discountPercentage" className="block text-sm text-gray-700 mb-1">
+                        Discount Percentage:
+                      </label>
+                      <div className="flex items-center">
+                        <input 
+                          type="number" 
+                          id="discountPercentage" 
+                          value={discountPercentage} 
+                          onChange={(e) => setDiscountPercentage(Math.min(99, Math.max(1, parseInt(e.target.value) || 0)))}
+                          className="flex-1 border border-gray-300 rounded-md px-3 py-1 focus:ring-green-500 focus:border-green-500"
+                          min="1"
+                          max="99"
+                        />
+                        <span className="ml-2">%</span>
+                      </div>
+                      <p className="text-xs text-gray-500 mt-1">
+                        Deal price: ${(item.price * (1 - discountPercentage / 100)).toFixed(2)}
+                      </p>
+                    </div>
+                    
+                    <div className="mb-3">
+                      <label htmlFor="expirationDays" className="block text-sm text-gray-700 mb-1">
+                        Expires in (days):
+                      </label>
+                      <input 
+                        type="number" 
+                        id="expirationDays" 
+                        value={expirationDays} 
+                        onChange={(e) => setExpirationDays(Math.max(1, parseInt(e.target.value) || 0))}
+                        className="w-full border border-gray-300 rounded-md px-3 py-1 focus:ring-green-500 focus:border-green-500"
+                        min="1"
+                      />
+                      <p className="text-xs text-gray-500 mt-1">
+                        Expires on: {new Date(Date.now() + expirationDays * 24 * 60 * 60 * 1000).toLocaleDateString()}
+                      </p>
+                    </div>
+                    
                     <div className="flex gap-2">
                       <button 
-                        className="flex-1 bg-red-600 text-white py-1 px-3 rounded hover:bg-red-700 transition-colors"
-                        onClick={handleDeleteItem}
-                        disabled={deleting}
+                        className="flex-1 bg-green-600 text-white py-1 px-3 rounded hover:bg-green-700 transition-colors"
+                        onClick={handleSetDeal}
+                        disabled={settingDeal}
                       >
-                        {deleting ? 'Deleting...' : 'Yes, Delete'}
+                        {settingDeal ? 'Setting Deal...' : 'Apply Deal'}
                       </button>
                       <button 
                         className="flex-1 bg-gray-200 text-gray-800 py-1 px-3 rounded hover:bg-gray-300 transition-colors"
-                        onClick={() => setShowDeleteConfirm(false)}
-                        disabled={deleting}
+                        onClick={() => setShowDealForm(false)}
+                        disabled={settingDeal}
                       >
                         Cancel
                       </button>
                     </div>
                   </div>
                 )}
+                
+                {/* Delete button */}
+                <div>
+                  {!showDeleteConfirm ? (
+                    <button 
+                      className="w-full text-red-600 border border-red-600 py-2 px-4 rounded hover:bg-red-50 transition-colors"
+                      onClick={() => setShowDeleteConfirm(true)}
+                    >
+                      Delete Item
+                    </button>
+                  ) : (
+                    <div className="border border-red-200 rounded p-3 bg-red-50">
+                      <p className="text-red-700 mb-2">Are you sure you want to delete this item?</p>
+                      <div className="flex gap-2">
+                        <button 
+                          className="flex-1 bg-red-600 text-white py-1 px-3 rounded hover:bg-red-700 transition-colors"
+                          onClick={handleDeleteItem}
+                          disabled={deleting}
+                        >
+                          {deleting ? 'Deleting...' : 'Yes, Delete'}
+                        </button>
+                        <button 
+                          className="flex-1 bg-gray-200 text-gray-800 py-1 px-3 rounded hover:bg-gray-300 transition-colors"
+                          onClick={() => setShowDeleteConfirm(false)}
+                          disabled={deleting}
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
             )}
             

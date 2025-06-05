@@ -24,7 +24,7 @@ export default function Footer() {
           <p className="text-sm md:text-base mb-4">Faster than a snail!</p>
           <p className="text-lg md:text-xl font-grover mb-2">Our Links:</p>
           <div className="flex flex-col gap-1">
-            {["shop", "home", "deals", "profiles"].map((label) => (
+            {["shop", "home", "deals", "favorites", "user"].map((label) => (
               <div
                 key={label}
                 onClick={() => navigate(`/${label}`)}

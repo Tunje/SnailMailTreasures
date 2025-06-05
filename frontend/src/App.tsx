@@ -1,12 +1,15 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import ItemDetailPage from './components/ItemDetailPage';
 import "./index.css";
+import "./styles/dealAnimations.css";
 import Navbar from "./components/navbar";
 import Footer from "./components/footer";
 import PlaceholderHomePage from './components/PlaceholderHomePage'
 import Login from './components/Login'
 import Registration from './components/Registration'
 import SearchResultsPage from './pages/SearchResultsPage'
+import FavoritesPage from './pages/FavoritesPage'
+import DealsPage from './pages/DealsPage'
 import UserPage from './components/UserPage'
 import AddItemPage from './components/AddItemPage'
 import CartPage from './components/CartPage';
@@ -25,8 +28,8 @@ function App() {
             <Route path="/register" element={<Registration />} />
             <Route path="/search" element={<SearchResultsPage query={''} />} />
             <Route path="/shop" element={<SearchResultsPage query={''} />} />
-            <Route path="/deals" element={<PlaceholderHomePage />} />
-            <Route path="/favorites" element={<PlaceholderHomePage />} />
+            <Route path="/deals" element={<DealsPage />} />
+            <Route path="/favorites" element={<FavoritesPage />} />
             <Route path="/cart" element={<CartPage />} />
             <Route path="/user" element={<UserPage />} />
             <Route path="/item/:id" element={<ItemDetailPage />} />

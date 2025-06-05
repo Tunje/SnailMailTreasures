@@ -15,8 +15,8 @@ const Registration = () => {
     } else if (username.length < 6) {
       alert("Username must be at least 6 characters long");
       return;
-    } else if (password.length < 6) {
-      alert("Password must be at least 6 characters long");
+    } else if (password.length < 8) {
+      alert("Password must be at least 8 characters long");
       return;
     } else if (email.indexOf("@") === -1) {
       alert("Please enter a valid email address");
@@ -24,10 +24,11 @@ const Registration = () => {
     }
 
     try {
-      await createUser({ username, email, password });
+      // Fix parameter name to match what userService expects (userName instead of username)
+      await createUser({ userName: username, email, password });
       alert("User registered successfully");
     } catch (err) {
-      console.error("Error fetching user data:", err);
+      console.error("Error registering user:", err);
     }
   };
 
