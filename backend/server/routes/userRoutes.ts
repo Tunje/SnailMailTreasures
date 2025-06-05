@@ -4,8 +4,9 @@ import {
   getUserById, 
   getUserByUsername, 
   updateUser,
+  removeFromFavourite,
   addToFavourite, 
-  deleteUser 
+  deleteUser, 
 } from "../controllers/userController";
 import { protect } from "../middleware/authMiddleware";
 
@@ -177,6 +178,147 @@ const userRouter = express.Router();
 /**
  * @swagger
  * /api/users/{id}:
+ *   post:
+ *     summary: Add an item to a user's favourites
+ *     description: Adds an item to a user's favourites list and increments the item's favourite count.
+ *     tags:
+ *       - Users
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: The ID of the user
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       description: Item ID to add to favourites
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - itemId
+ *             properties:
+ *               itemId:
+ *                 type: string
+ *                 description: The ID of the item to add to favourites
+ *     responses:
+ *       200:
+ *         description: Item successfully added to favourites
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Item added to favourites
+ *                 favourites:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *       400:
+ *         description: Item already in favourites
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Item already in favourites
+ *       404:
+ *         description: User not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: User not found
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ */
+
+/**
+ * @swagger
+ * /api/users/{id}/favourites/{itemId}:
+ *   delete:
+ *     summary: Remove an item from a user's favourites
+ *     description: Removes an item from a user's favourites list and decreases the item's favourite count.
+ *     tags:
+ *       - Users
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: The ID of the user
+ *         schema:
+ *           type: string
+ *       - in: path
+ *         name: itemId
+ *         required: true
+ *         description: The ID of the item to remove from favourites
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Item successfully removed from favourites
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Item removed from favourites
+ *                 favourites:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *       400:
+ *         description: Item not in favourites
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Item not in favourites
+ *       404:
+ *         description: User not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: User not found
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ */
+
+/**
+ * @swagger
+ * /api/users/{id}:
  *   delete:
  *     summary: Delete a user by ID
  *     tags: [User]
@@ -225,6 +367,7 @@ userRouter.get("/:id", getUserById);
 userRouter.get("/:userName", getUserByUsername);
 userRouter.put("/:id", updateUser);
 userRouter.post("/:id", protect, addToFavourite)
+userRouter.delete("/:id/favourites/:itemId", removeFromFavourite)
 userRouter.delete("/:id", deleteUser);
 
 export default userRouter;

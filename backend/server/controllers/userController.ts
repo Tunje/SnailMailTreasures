@@ -136,6 +136,51 @@ export const addToFavourite = async (req: Request, res: Response): Promise<any> 
   }
 };
 
+// DELETE - Remove an item from user's favourites
+export const removeFromFavourite = async (req: Request, res: Response): Promise<any> => {
+  try {
+    const userId = req.params.id;
+    const itemId = req.body.itemId;
+
+    // Find the user by ID
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Check if the item exists in favourites
+    const index = user.favourites.indexOf(itemId);
+    if (index === -1) {
+      return res.status(400).json({ message: "Item not in favourites" });
+    }
+
+    // Remove the item from the favourites array
+    user.favourites.splice(index, 1);
+    await user.save();
+
+    // Safely decrement favouriteCount only if it's greater than 0
+    const item = await Item.findById(itemId);
+    if (item && (item as any).favouriteCount > 0) {
+      await Item.findByIdAndUpdate(itemId, {
+        $inc: { favouriteCount: -1 }
+      });
+    }
+
+    res.status(200).json({
+      message: "Item removed from favourites",
+      favourites: user.favourites
+    });
+
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      res.status(500).json({ message: error.message });
+    } else {
+      res.status(500).json({ message: "An unknown error occurred" });
+    }
+  }
+};
+
+
 // DELETE - Remove a user by ID
 export const deleteUser = async (req: Request, res: Response): Promise<any> => {
   try {
