@@ -1,11 +1,25 @@
-import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import { useState, useEffect } from "react";
 import api from "../services/api";
 
 const Login = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  
+  // Check if user was redirected due to expired token
+  const from = location.state?.from || "/home";
+  const expired = location.state?.expired || false;
+
+  // Show expired session message once when component mounts
+  useEffect(() => {
+    if (expired) {
+      // This will only show once when the component mounts
+      console.log("Session expired, redirected from:", from);
+      alert("Your session has expired. Please log in again.");
+    }
+  }, [expired, from]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -23,9 +37,15 @@ const Login = () => {
       const response = await api.post("/auth/login", { email, password });
       const { data } = response;
       localStorage.setItem("token", data.token);
+      
+      // Store user data if available
+      if (data.user) {
+        localStorage.setItem("user", JSON.stringify(data.user));
+      }
 
       alert("Login successful");
-      navigate("/home");
+      // Navigate back to the page they were trying to access if they were redirected
+      navigate(expired ? from : "/home");
     } catch (error: any) {
       console.error("Login error:", error);
       

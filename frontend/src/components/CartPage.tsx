@@ -13,7 +13,6 @@ function firebaseGsToHttpUrl(gsUrl: string): string {
 const CartPage: React.FC = () => {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [loading, setLoading] = useState(true);
-  const [checkingOut, setCheckingOut] = useState(false);
   const navigate = useNavigate();
 
   // Load cart items on component mount
@@ -38,18 +37,8 @@ const CartPage: React.FC = () => {
 
   // Handle checkout
   const handleCheckout = () => {
-    setCheckingOut(true);
-    
-    // Simulate checkout process
-    setTimeout(() => {
-      clearCart();
-      setCartItems([]);
-      setCheckingOut(false);
-      
-      // Show success message and redirect
-      alert('Checkout successful! Thank you for your purchase.');
-      navigate('/');
-    }, 1500);
+    // Redirect to shipping page
+    navigate('/shipping');
   };
 
   // Calculate cart total
@@ -167,10 +156,9 @@ const CartPage: React.FC = () => {
             
             <button 
               onClick={handleCheckout}
-              disabled={checkingOut}
               className="btn-primary"
             >
-              {checkingOut ? 'Processing...' : 'Proceed to Checkout'}
+              Proceed to Checkout
             </button>
           </div>
         </>

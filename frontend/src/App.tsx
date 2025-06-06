@@ -13,11 +13,15 @@ import DealsPage from './pages/DealsPage'
 import UserPage from './components/UserPage'
 import AddItemPage from './components/AddItemPage'
 import CartPage from './components/CartPage';
+import ShippingPage from './pages/ShippingPage';
+import PaymentPage from './pages/PaymentPage';
+import TokenExpirationChecker from './components/TokenExpirationChecker';
 
 function App() {
 
   return (
     <Router>
+      <TokenExpirationChecker />
       <Navbar />
       <div className="flex flex-col min-h-screen w-full max-w-7xl mx-auto">
         <main className="flex-1 py-8 px-4">
@@ -31,6 +35,8 @@ function App() {
             <Route path="/deals" element={<DealsPage />} />
             <Route path="/favorites" element={<FavoritesPage />} />
             <Route path="/cart" element={<CartPage />} />
+            <Route path="/shipping" element={<ShippingPage />} />
+            <Route path="/payment" element={<PaymentPage />} />
             <Route path="/user" element={<UserPage />} />
             <Route path="/item/:id" element={<ItemDetailPage />} />
             <Route path="/add-item" element={<AddItemPage />} />

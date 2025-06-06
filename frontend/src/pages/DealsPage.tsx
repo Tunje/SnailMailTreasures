@@ -79,7 +79,7 @@ export default function DealsPage() {
                 >
                   {/* Savings badge */}
                   {item.deal?.dealPrice && (
-                    <div className="absolute top-4 left-4 bg-red-600 text-white px-3 py-1 rounded-full text-sm font-bold z-10">
+                    <div className="absolute top-4 left-4 bg-red-600 text-white px-3 py-1 rounded-full text-sm font-bold z-20">
                       Save {calculateSavings(item.price, item.deal.dealPrice)}%
                     </div>
                   )}

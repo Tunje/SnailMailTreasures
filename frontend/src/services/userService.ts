@@ -84,6 +84,8 @@ export const deleteUser = async (id: string): Promise<{ message: string }> => {
 // Add item to favorites
 export const addToFavorite = async (userId: string, itemId: string): Promise<{ message: string, favourites: string[] }> => {
   try {
+    // The backend route is POST /api/users/:id with itemId in the request body
+    // The api instance already has the baseURL set to include /api
     const response = await api.post(`/users/${userId}`, { itemId });
     return response.data;
   } catch (error) {
@@ -95,7 +97,10 @@ export const addToFavorite = async (userId: string, itemId: string): Promise<{ m
 // Remove item from favorites
 export const removeFromFavorite = async (userId: string, itemId: string): Promise<{ message: string, favourites: string[] }> => {
   try {
-    const response = await api.delete(`/users/${userId}/favorites/${itemId}`);
+    // Using axios delete with data payload (second parameter is config, third is data)
+    const response = await api.delete(`/users/${userId}/favourites/${itemId}`, {
+      data: { itemId }
+    });
     return response.data;
   } catch (error) {
     console.error('Error removing item from favorites:', error);
