@@ -2,9 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Apply Irish Grover font to all text */
+/* Apply fonts */
 @layer base {
   html {
+    font-family: "Open Sans", "Segoe UI", Roboto, Arial, sans-serif;
+  }
+  
+  h1, h2, h3, .font-stylized, .btn-primary, .btn-secondary, .section-title {
     font-family: "Irish Grover", cursive;
   }
 }
